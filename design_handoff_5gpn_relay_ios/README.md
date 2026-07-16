@@ -104,7 +104,7 @@
 ### A7. 安装（id install，`--bg` 底）
 - eyebrow "安装 · KFCHost 专线主机"；H2 "一条命令拉起中继服务器"；sub "在你的 KFCHost 专线主机上（Debian / Ubuntu / CentOS / Rocky，root）运行。它会装好 Docker、gum、Node，签证书、起 Envoy，并生成 iOS 配置 + 二维码。"
 - 深色终端（max 840px；bar 标签 `root@kfchost-box`）：
-  - `$ curl -fsSL https://moooyo.github.io/5gpn-relay/install.sh | sudo bash`（`$` 青、URL 紫）
+  - `$ curl -fsSL https://raw.githubusercontent.com/moooyo/5gpn-relay/main/install.sh | sudo bash`（`$` 青、URL 紫）
   - "复制"按钮：写剪贴板，文案 复制→已复制（1.6s）
 - 注释："需要一个指向 KFCHost 主机、经专线可达的域名。装完后运行 `relayctl profiles` 生成配置并出二维码，或用网页生成器自定义规则。"
 

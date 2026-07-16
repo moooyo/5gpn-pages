@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #fbfbfd; }
+a { color: #0071e3; text-decoration: none; }
+a:hover { color: #0077ed; }
+::selection { background: rgba(94, 92, 230, .2); }
+@keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@media (max-width: 720px) { .nav-ext { display: none !important; } }
+@media (max-width: 560px) { .theme-label { display: none !important; } .nav-seg { display: none !important; } }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="--accent:#5e5ce6;--accentSoft:#5e5ce61a;--accentGlow:#5e5ce62e;--bg:#fbfbfd;--surface:#f5f5f7;--card:#ffffff;--ink:#1d1d1f;--muted:#6e6e73;--faint:#86868b;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.06);--hairline:rgba(0,0,0,.07);--strokeIn:rgba(0,0,0,.16);--heroWash:#f0f0ff;--navbg:rgba(251,251,253,.82);background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue','PingFang SC','Microsoft YaHei',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh">
+
+  <header data-screen-label="Nav" style="position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);background:var(--navbg);border-bottom:1px solid var(--hairline)">
+    <div style="max-width:1120px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:24px">
+      <div style="display:flex;align-items:center;gap:18px;flex:none;min-width:0">
+        <a href="#top" style="display:flex;align-items:center;gap:8px;font-size:19px;font-weight:600;letter-spacing:-0.01em;color:var(--ink);flex:none">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)"></span>
+          <span>5GPN <span style="color:var(--faint);font-weight:400">Relay</span></span>
+        </a>
+        <div class="nav-seg" style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border2);border-radius:980px;padding:3px;gap:2px">
+          <a href="" title="切换到 DNS 网关方案" style="display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 14px;border-radius:980px;color:var(--muted);font-size:12.5px;font-weight:500;white-space:nowrap" style-hover="color:var(--ink)">DNS 网关<span style="font-size:11px;opacity:.6;transform:translateY(-1px)">↗</span></a>
+          <span style="display:inline-flex;align-items:center;min-height:28px;padding:0 14px;border-radius:980px;background:var(--card);color:var(--ink);font-size:12.5px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08);white-space:nowrap">Apple Relay</span>
+        </div>
+      </div>
+      <nav style="min-width:0;display:flex;gap:16px;align-items:center;justify-content:flex-end;font-size:14px">
+        <div style="display:flex;align-items:center;gap:10px;margin-left:8px">
+          <a class="nav-ext" href="https://kfchost.com/center/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px;color:var(--muted);white-space:nowrap" style-hover="color:var(--ink)">
+            <span>KFCHost</span><span style="font-size:12px;opacity:.65;transform:translateY(-1px)">↗</span>
+          </a>
+          <a class="nav-ext" href="https://github.com/moooyo/5gpn-relay" target="_blank" rel="noreferrer" style="display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px;color:var(--muted);white-space:nowrap" style-hover="color:var(--ink)">
+            <span>GitHub</span><span style="font-size:12px;opacity:.65;transform:translateY(-1px)">↗</span>
+          </a>
+          <button type="button" onClick="{{ toggleTheme }}" title="切换主题（浅色 / 深色）" style="display:inline-flex;align-items:center;gap:6px;min-height:36px;border:1px solid var(--border);background:var(--card);color:var(--ink);padding:0 12px;border-radius:980px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.03)" style-hover="border-color:var(--strokeIn);background:var(--surface)" style-active="transform:scale(.97)">
+            <span style="color:var(--muted);font-size:14px">◐</span><span class="theme-label">{{ themeLabel }}</span>
+          </button>
+          <a href="5GPN Relay Generator iOS Redesign.dc.html" style="display:inline-flex;align-items:center;justify-content:center;min-height:36px;background:#0071e3;color:#fff;padding:0 18px;border-radius:980px;font-weight:600;white-space:nowrap;box-shadow:0 4px 12px rgba(0,113,227,.2)" style-hover="background:#0077ed;color:#fff;transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,113,227,.26)">生成配置</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section data-screen-label="Hero" style="text-align:center;padding:clamp(60px,10vw,96px) 24px 40px;background:radial-gradient(120% 90% at 50% 0%, var(--heroWash) 0%, var(--bg) 58%)">
+      <p style="font-size:14px;font-weight:600;color:var(--accent);margin:0 0 20px;letter-spacing:0.02em">Apple Network Relay · MASQUE</p>
+      <h1 style="font-size:clamp(38px,8.5vw,78px);line-height:1.04;letter-spacing:-0.035em;font-weight:700;margin:0 auto 26px;max-width:920px">无需 VPN，也能<span style="color:var(--accent)">分流</span>。</h1>
+      <p style="font-size:clamp(17px,2.6vw,22px);line-height:1.5;color:var(--muted);max-width:640px;margin:0 auto 30px">依靠 5GPN 与 Apple Relay 能力，实现按规则的分流访问——装的是描述文件，不是 VPN，状态栏干干净净。</p>
+      <div style="display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap;margin-bottom:26px">
+        <a href="5GPN Relay Generator iOS Redesign.dc.html" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#0071e3;color:#fff;border-radius:980px;font-weight:500;padding:15px 30px;font-size:17px;box-shadow:0 4px 12px rgba(0,113,227,.2)" style-hover="background:#0077ed;color:#fff;transform:translateY(-1px)">生成 iOS 配置 →</a>
+        <a href="#how" style="color:#0071e3;font-weight:500;font-size:17px">看它怎么工作 ›</a>
+      </div>
+      <p style="font-size:14px;color:var(--muted);margin:0 0 34px">需配合 <a href="https://kfchost.com/center/" target="_blank" rel="noopener" style="font-weight:600">KFCHost</a> 专线主机 + <b style="color:var(--ink);font-weight:600">5GPN 订阅包</b> 使用</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:8px 15px;border-radius:980px"><span style="width:6px;height:6px;border-radius:50%;background:#34c759"></span>无 VPN 图标</span>
+        <span style="display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:8px 15px;border-radius:980px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>无需监管 / MDM</span>
+        <span style="display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:8px 15px;border-radius:980px"><span style="width:6px;height:6px;border-radius:50%;background:#ff9f0a"></span>覆盖蜂窝</span>
+        <span style="display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:8px 15px;border-radius:980px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>带 UDP/QUIC</span>
+      </div>
+    </section>
+
+    <section data-screen-label="Schematic" aria-label="流量分流示意图：iPhone 在分流点把直连目标本地直出，其余经中继走专线到 5GPN 出口" style="padding:20px 24px clamp(60px,10vw,100px);background:radial-gradient(120% 90% at 50% 0%, var(--heroWash) 0%, var(--bg) 52%)">
+      <div style="max-width:860px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:clamp(22px,4vw,40px) clamp(20px,4.5vw,44px) 30px;box-shadow:0 20px 60px var(--hairline);animation:floaty 7s ease-in-out infinite">
+        <svg viewBox="0 0 820 320" width="100%" role="img" style="max-width:760px;display:block;margin:0 auto">
+          <path d="M122,172 L176,172" style="stroke:var(--faint)" stroke-width="2" fill="none" opacity="0.5"></path>
+          <path d="M224,172 C 330,172 362,82 470,82" stroke="#34c759" stroke-width="2.5" fill="none" opacity="0.45"></path>
+          <path d="M224,172 C 272,172 250,261 300,261" style="stroke:var(--accent)" stroke-width="2.5" fill="none" opacity="0.45"></path>
+          <path d="M416,261 L500,261" stroke="#ff9f0a" stroke-width="2.5" fill="none" stroke-dasharray="6 5" opacity="0.7"></path>
+          <path d="M640,261 L700,261" style="stroke:var(--accent)" stroke-width="2.5" fill="none" opacity="0.45"></path>
+          <rect x="30" y="130" width="92" height="84" rx="14" style="fill:var(--card);stroke:var(--strokeIn)"></rect>
+          <text x="76" y="167" text-anchor="middle" font-size="15" font-weight="600" style="fill:var(--ink)">iPhone</text>
+          <text x="76" y="187" text-anchor="middle" font-size="11" style="fill:var(--faint)">蜂窝 / Wi-Fi</text>
+          <polygon points="200,150 224,172 200,194 176,172" style="fill:var(--heroWash);stroke:var(--accent)" stroke-width="1.5"></polygon>
+          <text x="200" y="216" text-anchor="middle" font-size="10" font-weight="700" style="fill:var(--accent)" font-family="ui-monospace,Menlo,monospace">SPLIT</text>
+          <rect x="470" y="44" width="200" height="76" rx="14" style="fill:var(--card);stroke:#34c759" stroke-width="1.5"></rect>
+          <text x="570" y="79" text-anchor="middle" font-size="15" font-weight="600" style="fill:var(--ink)">直连目标</text>
+          <text x="570" y="99" text-anchor="middle" font-size="11" fill="#34c759">本地直连 · DIRECT</text>
+          <rect x="300" y="230" width="116" height="62" rx="14" style="fill:var(--card);stroke:var(--accent)" stroke-width="1.5"></rect>
+          <text x="358" y="258" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--ink)">relay</text>
+          <text x="358" y="277" text-anchor="middle" font-size="10.5" style="fill:var(--faint)">MASQUE</text>
+          <text x="458" y="251" text-anchor="middle" font-size="10.5" font-weight="700" fill="#ff9f0a">专线</text>
+          <rect x="500" y="230" width="140" height="62" rx="14" style="fill:var(--card);stroke:var(--strokeIn)"></rect>
+          <text x="570" y="258" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--ink)">5GPN 出口</text>
+          <text x="570" y="277" text-anchor="middle" font-size="10.5" style="fill:var(--faint)">EXIT · 专线节点</text>
+          <rect x="700" y="225" width="92" height="72" rx="14" style="fill:var(--card);stroke:var(--strokeIn)"></rect>
+          <text x="746" y="256" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--ink)">世界</text>
+          <text x="746" y="275" text-anchor="middle" font-size="10" style="fill:var(--faint)">INTERNET</text>
+          <circle r="4.5" fill="#34c759"><animateMotion dur="2.8s" repeatCount="indefinite" path="M122,172 L200,172 C 330,172 362,82 470,82"></animateMotion></circle>
+          <circle r="4.5" fill="#34c759"><animateMotion dur="2.8s" begin="-1.4s" repeatCount="indefinite" path="M122,172 L200,172 C 330,172 362,82 470,82"></animateMotion></circle>
+          <circle r="4.5" style="fill:var(--accent)"><animateMotion dur="4.6s" repeatCount="indefinite" path="M122,172 L200,172 C 272,172 250,261 300,261 L416,261 L500,261 L640,261 L700,261"></animateMotion></circle>
+          <circle r="4.5" style="fill:var(--accent)"><animateMotion dur="4.6s" begin="-1.5s" repeatCount="indefinite" path="M122,172 L200,172 C 272,172 250,261 300,261 L416,261 L500,261 L640,261 L700,261"></animateMotion></circle>
+          <circle r="4.5" style="fill:var(--accent)"><animateMotion dur="4.6s" begin="-3s" repeatCount="indefinite" path="M122,172 L200,172 C 272,172 250,261 300,261 L416,261 L500,261 L640,261 L700,261"></animateMotion></circle>
+        </svg>
+      </div>
+    </section>
+
+    <section id="how" data-screen-label="原理" style="padding:clamp(60px,9vw,100px) 24px;background:var(--surface);scroll-margin-top:60px">
+      <div style="max-width:1120px;margin:0 auto">
+        <div style="text-align:center;max-width:720px;margin:0 auto 60px">
+          <p style="font-size:14px;font-weight:600;color:var(--accent);margin:0 0 12px">原理 · 一个数据包的旅程</p>
+          <h2 style="font-size:clamp(28px,4.6vw,44px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;margin:0 0 16px">它不是 VPN，<br />是一个按规则工作的系统级中继</h2>
+          <p style="font-size:18px;color:var(--muted);line-height:1.55;margin:0">iOS 17 起，Apple 把系统级中继背后的 MASQUE 机制开放给了描述文件。整条链路是顺序发生的。</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+          <div style="background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:26px 22px">
+            <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px">01</div>
+            <h3 style="font-size:17px;font-weight:600;margin:0 0 8px">解析</h3>
+            <p style="font-size:13.5px;color:var(--muted);line-height:1.55;margin:0">先解析目标地址，判断它该本地直连还是交给 5GPN 中继；配套加密 DNS 保证解析稳定可靠。</p>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:26px 22px">
+            <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px">02</div>
+            <h3 style="font-size:17px;font-weight:600;margin:0 0 8px">判定</h3>
+            <p style="font-size:13.5px;color:var(--muted);line-height:1.55;margin:0">按所选规则匹配目标（自动含子域）：命中直连集就本地直出，否则交给中继。</p>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:26px 22px">
+            <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px">03</div>
+            <h3 style="font-size:17px;font-weight:600;margin:0 0 8px">中继</h3>
+            <p style="font-size:13.5px;color:var(--muted);line-height:1.55;margin:0">用 CONNECT / CONNECT-UDP（RFC 9298）经专线送到 KFCHost 节点，由节点在出口重新解析并连出——是 MASQUE 而非隧道网卡，状态栏没有 VPN 图标。</p>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:26px 22px">
+            <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;font-weight:700;color:#34c759;margin-bottom:12px">04</div>
+            <h3 style="font-size:17px;font-weight:600;margin:0 0 8px">直连</h3>
+            <p style="font-size:13.5px;color:var(--muted);line-height:1.55;margin:0">其余流量根本不进隧道，蜂窝 / Wi-Fi 正常出口，专线只承载真正需要它的流量。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="modes" data-screen-label="两种模式" style="padding:clamp(60px,9vw,100px) 24px;scroll-margin-top:60px">
+      <div style="max-width:1120px;margin:0 auto">
+        <div style="text-align:center;max-width:720px;margin:0 auto 56px">
+          <p style="font-size:14px;font-weight:600;color:var(--accent);margin:0 0 12px">两种模式 · 都支持自定义包含 / 排除</p>
+          <h2 style="font-size:clamp(28px,4.6vw,44px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;margin:0">选一条基线规则，再按需微调</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:920px;margin:0 auto">
+          <div style="background:var(--card);border-radius:22px;padding:34px;border:1px solid rgba(94,92,230,.25);box-shadow:0 10px 40px rgba(94,92,230,.06)">
+            <span style="display:inline-block;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:8px;margin-bottom:18px;color:var(--accent);background:var(--accentSoft)">黑名单模式</span>
+            <h3 style="font-size:24px;font-weight:700;margin:0 0 10px">只有命中的走中继</h3>
+            <p style="font-size:15px;color:var(--muted);line-height:1.55;margin:0 0 20px">命中名单的目标走 5GPN 中继，其余全部本地直连。</p>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:10px;align-items:center;font-size:14.5px;color:var(--ink)"><span style="font-size:12px;font-weight:600;padding:3px 9px;border-radius:6px;color:var(--accent);background:var(--accentSoft);flex:none">≈150 KB</span>描述文件小，专线只跑该跑的</div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--muted)"><span style="color:var(--accent);flex:none">·</span>省专线、省电，适合日常使用</div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--muted)"><span style="color:var(--accent);flex:none">·</span>名单未覆盖的新目标会走直连（随订阅更新）</div>
+            </div>
+          </div>
+          <div style="background:var(--card);border-radius:22px;padding:34px;border:1px solid rgba(52,199,89,.28);box-shadow:0 10px 40px rgba(52,199,89,.06)">
+            <span style="display:inline-block;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:8px;margin-bottom:18px;color:#248a3d;background:rgba(52,199,89,.12)">白名单模式</span>
+            <h3 style="font-size:24px;font-weight:700;margin:0 0 10px">未命中的全部走中继</h3>
+            <p style="font-size:15px;color:var(--muted);line-height:1.55;margin:0 0 20px">只有命中名单的目标本地直连，其余全部走中继，覆盖最全。</p>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;gap:10px;align-items:center;font-size:14.5px;color:var(--ink)"><span style="font-size:12px;font-weight:600;padding:3px 9px;border-radius:6px;color:#8a5a00;background:rgba(255,159,10,.14);flex:none">≈3.8 MB</span>名单约 11 万条，描述文件较大</div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--muted)"><span style="color:#34c759;flex:none">·</span>目标在 KFCHost 节点解析，链路最干净</div>
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:14.5px;color:var(--muted)"><span style="color:#34c759;flex:none">·</span>新目标默认走中继不会漏，适合全量分流</div>
+            </div>
+          </div>
+        </div>
+        <p style="text-align:center;color:var(--faint);font-size:13px;margin:28px 0 0;font-family:ui-monospace,'SF Mono',Menlo,monospace">规则名单随 5GPN 订阅包每日更新分发，可在生成器里叠加自定义包含 / 排除</p>
+      </div>
+    </section>
+
+    <section id="start" data-screen-label="开始使用" style="padding:clamp(60px,9vw,100px) 24px;background:var(--surface);scroll-margin-top:60px">
+      <div style="max-width:1120px;margin:0 auto">
+        <div style="text-align:center;max-width:720px;margin:0 auto 56px">
+          <p style="font-size:14px;font-weight:600;color:var(--accent);margin:0 0 12px">开始使用 · 三步</p>
+          <h2 style="font-size:clamp(28px,4.6vw,44px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;margin:0 0 14px">配合 KFCHost 与 5GPN 订阅包</h2>
+          <p style="font-size:18px;color:var(--muted);line-height:1.55;margin:0">5GPN Relay 负责分流与描述文件；专线出口与规则订阅由 KFCHost 与 5GPN 订阅包提供。</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;max-width:960px;margin:0 auto">
+          <div style="background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:30px">
+            <div style="width:38px;height:38px;border-radius:11px;background:var(--accent);color:#fff;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:18px">1</div>
+            <h3 style="font-size:19px;font-weight:600;margin:0 0 8px">开通 KFCHost 专线主机</h3>
+            <p style="font-size:14.5px;color:var(--muted);line-height:1.6;margin:0 0 14px">在 KFCHost 开通一台经专线可达的主机，作为 5GPN 的专线出口节点。</p>
+            <a href="https://kfchost.com/center/" target="_blank" rel="noopener" style="font-size:14.5px;font-weight:500">前往 KFCHost 官网 ›</a>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:30px">
+            <div style="width:38px;height:38px;border-radius:11px;background:var(--accent);color:#fff;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:18px">2</div>
+            <h3 style="font-size:19px;font-weight:600;margin:0 0 8px">订阅 5GPN</h3>
+            <p style="font-size:14.5px;color:var(--muted);line-height:1.6;margin:0">获取 5GPN 订阅包与访问令牌。规则名单每日更新，随订阅自动分发。</p>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:30px">
+            <div style="width:38px;height:38px;border-radius:11px;background:var(--accent);color:#fff;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:18px">3</div>
+            <h3 style="font-size:19px;font-weight:600;margin:0 0 8px">生成并安装配置</h3>
+            <p style="font-size:14.5px;color:var(--muted);line-height:1.6;margin:0 0 14px">在生成器填入域名与令牌，选模式、加规则，一键安装到 iPhone。</p>
+            <a href="5GPN Relay Generator iOS Redesign.dc.html" style="font-size:14.5px;font-weight:500">打开生成器 ›</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" data-screen-label="安装" style="padding:clamp(60px,9vw,100px) 24px;scroll-margin-top:60px">
+      <div style="max-width:840px;margin:0 auto">
+        <div style="text-align:center;max-width:720px;margin:0 auto 44px">
+          <p style="font-size:14px;font-weight:600;color:var(--accent);margin:0 0 12px">安装 · KFCHost 专线主机</p>
+          <h2 style="font-size:clamp(28px,4.6vw,44px);line-height:1.1;letter-spacing:-0.02em;font-weight:700;margin:0 0 16px">一条命令拉起中继服务器</h2>
+          <p style="font-size:17px;color:var(--muted);line-height:1.55;margin:0">在你的 KFCHost 专线主机上（Debian / Ubuntu / CentOS / Rocky，root）运行。它会装好 Docker、gum、Node，签证书、起 Envoy，并生成 iOS 配置 + 二维码。</p>
+        </div>
+        <div style="background:#1d1d1f;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.14)">
+          <div style="display:flex;align-items:center;gap:8px;padding:13px 18px;background:#2a2a2c;border-bottom:1px solid rgba(255,255,255,.08)">
+            <span style="width:12px;height:12px;border-radius:50%;background:#ff5f56"></span>
+            <span style="width:12px;height:12px;border-radius:50%;background:#ffbd2e"></span>
+            <span style="width:12px;height:12px;border-radius:50%;background:#27c93f"></span>
+            <span style="margin-left:10px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;color:#8a8a8e">root@kfchost-box</span>
+          </div>
+          <div style="padding:20px 22px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:clamp(12px,3.2vw,15px);color:#e8e8ed;line-height:1.7;display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px">
+            <pre style="margin:0;white-space:pre-wrap;word-break:break-all;font-family:inherit"><span style="color:#5ac8fa">$</span> curl -fsSL <span style="color:#a78bfa">https://moooyo.github.io/5gpn-relay/install.sh</span> | sudo bash</pre>
+            <button type="button" onClick="{{ copyCmd }}" style="flex:none;border:1px solid rgba(255,255,255,.18);background:transparent;color:#e8e8ed;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12px;padding:6px 12px;border-radius:8px;cursor:pointer;min-width:56px" style-hover="background:rgba(255,255,255,.08)">{{ copyLabel }}</button>
+          </div>
+        </div>
+        <p style="text-align:center;color:var(--muted);font-size:14px;margin:22px 0 0;line-height:1.6">需要一个指向 KFCHost 主机、经专线可达的域名。装完后运行 <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.85em;background:var(--surface);padding:1px 6px;border-radius:6px;color:var(--accent)">relayctl profiles</span> 生成配置并出二维码，或用网页生成器自定义规则。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer data-screen-label="Footer" style="padding:clamp(48px,8vw,64px) 24px;background:#1d1d1f;color:#a1a1a6">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px 40px;max-width:1120px;margin:0 auto">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:18px;font-weight:600;color:#f5f5f7;margin-bottom:12px">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px rgba(94,92,230,.22)"></span>
+          <span>5GPN Relay</span>
+        </div>
+        <p style="font-size:13.5px;line-height:1.6;margin:0 0 16px">基于 Apple Network Relay（MASQUE）把 iOS 流量按规则做内网分流，经专线直达 KFCHost 节点——无 VPN 图标。需配合 KFCHost + 5GPN 订阅包。</p>
+        <div style="background:rgba(255,159,10,.08);border:1px solid rgba(255,159,10,.2);border-radius:12px;padding:14px 16px">
+          <p style="font-size:12.5px;line-height:1.55;margin:0 0 8px"><b style="color:#f5f5f7">未签名描述文件</b>安装时显示"未验证"，自用可接受。</p>
+          <p style="font-size:12.5px;line-height:1.55;margin:0"><b style="color:#f5f5f7">令牌即权限</b>：泄露 = 开放代理，请用 <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;color:#a78bfa">relayctl rotate</span> 轮换。</p>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:13px;font-weight:600;color:#f5f5f7;margin:0 0 14px">页面</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
+          <a href="#how" style="color:#a1a1a6" style-hover="color:#f5f5f7">原理</a>
+          <a href="#modes" style="color:#a1a1a6" style-hover="color:#f5f5f7">两种模式</a>
+          <a href="#start" style="color:#a1a1a6" style-hover="color:#f5f5f7">开始使用</a>
+          <a href="#install" style="color:#a1a1a6" style-hover="color:#f5f5f7">安装</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:13px;font-weight:600;color:#f5f5f7;margin:0 0 14px">相关</h4>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:13.5px">
+          <a href="5GPN Relay Generator iOS Redesign.dc.html" style="color:#a1a1a6" style-hover="color:#f5f5f7">生成配置</a>
+          <a href="" style="color:#a1a1a6" style-hover="color:#f5f5f7">DNS 网关方案</a>
+          <a href="https://github.com/moooyo/5gpn-relay" target="_blank" rel="noreferrer" style="color:#a1a1a6" style-hover="color:#f5f5f7">GitHub</a>
+          <a href="https://kfchost.com/center/" target="_blank" rel="noopener" style="color:#a1a1a6" style-hover="color:#f5f5f7">KFCHost 官网</a>
+        </div>
+      </div>
+      <div>
+        <h4 style="font-size:13px;font-weight:600;color:#f5f5f7;margin:0 0 14px">说明</h4>
+        <p style="font-size:13.5px;line-height:1.6;margin:0">请遵守当地法律法规与网络使用政策。仅技术工具，需配合 KFCHost 专线主机与 5GPN 订阅包使用；与 DNS 网关方案共享同一设计语言。</p>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;,&quot;section&quot;:&quot;主题&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#5e5ce6&quot;,&quot;#0071e3&quot;,&quot;#bf5af2&quot;,&quot;#30b0c7&quot;],&quot;default&quot;:&quot;#5e5ce6&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;主题&quot;}}">
+class Component extends DCLogic {
+  state = { theme: null, copied: false };
+  effTheme() { return this.state.theme ?? this.props.theme ?? 'light'; }
+  applyTheme() {
+    const el = this.rootEl; if (!el) return;
+    const dark = this.effTheme() === 'dark';
+    const v = dark ? {
+      '--bg': '#0a0a0c', '--surface': '#141416', '--card': '#1c1c1f', '--ink': '#f5f5f7',
+      '--muted': '#a1a1a6', '--faint': '#8a8a8e', '--border': 'rgba(255,255,255,.12)',
+      '--border2': 'rgba(255,255,255,.08)', '--hairline': 'rgba(255,255,255,.1)',
+      '--strokeIn': 'rgba(255,255,255,.2)', '--heroWash': '#17171f', '--navbg': 'rgba(16,16,18,.72)'
+    } : {
+      '--bg': '#fbfbfd', '--surface': '#f5f5f7', '--card': '#ffffff', '--ink': '#1d1d1f',
+      '--muted': '#6e6e73', '--faint': '#86868b', '--border': 'rgba(0,0,0,.08)',
+      '--border2': 'rgba(0,0,0,.06)', '--hairline': 'rgba(0,0,0,.07)',
+      '--strokeIn': 'rgba(0,0,0,.16)', '--heroWash': '#f0f0ff', '--navbg': 'rgba(251,251,253,.82)'
+    };
+    for (const k in v) el.style.setProperty(k, v[k]);
+    const ac = this.props.accent ?? '#5e5ce6';
+    el.style.setProperty('--accent', ac);
+    el.style.setProperty('--accentSoft', ac + '1a');
+    el.style.setProperty('--accentGlow', ac + '2e');
+    document.body.style.background = v['--bg'];
+  }
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+  componentWillUnmount() { clearTimeout(this._t); }
+  renderVals() {
+    return {
+      rootRef: (el) => { this.rootEl = el; if (el) this.applyTheme(); },
+      themeLabel: this.effTheme() === 'dark' ? '深色' : '浅色',
+      toggleTheme: () => this.setState({ theme: this.effTheme() === 'dark' ? 'light' : 'dark' }),
+      copyLabel: this.state.copied ? '已复制' : '复制',
+      copyCmd: () => {
+        const cmd = 'curl -fsSL https://moooyo.github.io/5gpn-relay/install.sh | sudo bash';
+        try { navigator.clipboard.writeText(cmd); } catch (e) {}
+        this.setState({ copied: true });
+        clearTimeout(this._t);
+        this._t = setTimeout(() => this.setState({ copied: false }), 1600);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

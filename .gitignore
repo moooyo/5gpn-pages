@@ -1,0 +1,8 @@
+# Internal design references — kept locally, not published
+design-plan/
+docs/superpowers/
+
+# Render / tooling scratch (lives outside the repo, listed for safety)
+node_modules/
+*.log
+.DS_Store

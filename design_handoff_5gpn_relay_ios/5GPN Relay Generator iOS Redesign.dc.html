@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #fbfbfd; }
+a { color: #0071e3; text-decoration: none; }
+a:hover { color: #0077ed; }
+::selection { background: rgba(94, 92, 230, .2); }
+@media (max-width: 760px) { .gen-grid { grid-template-columns: 1fr !important; } .gen-aside { position: static !important; } }
+@media (max-width: 560px) { .theme-label { display: none !important; } .nav-seg { display: none !important; } }
+.mode-option[aria-pressed="true"].mode-black { border-color: var(--accent) !important; background: var(--accentSoft) !important; }
+.mode-option[aria-pressed="true"].mode-white { border-color: #34c759 !important; background: rgba(52,199,89,.12) !important; }
+.mode-option .mode-badge { display: none; }
+.mode-option[aria-pressed="true"] .mode-badge { display: flex !important; }
+</style>
+</helmet>
+<div ref="{{ rootRef }}" style="--accent:#5e5ce6;--accentSoft:#5e5ce61a;--accentGlow:#5e5ce62e;--bg:#fbfbfd;--surface:#f5f5f7;--card:#ffffff;--ink:#1d1d1f;--muted:#6e6e73;--faint:#86868b;--border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.06);--hairline:rgba(0,0,0,.07);--strokeIn:rgba(0,0,0,.16);--heroWash:#f0f0ff;--navbg:rgba(251,251,253,.82);background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue','PingFang SC','Microsoft YaHei',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh">
+
+  <header data-screen-label="Nav" style="position:sticky;top:0;z-index:50;backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);background:var(--navbg);border-bottom:1px solid var(--hairline)">
+    <div style="max-width:1040px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:24px">
+      <div style="display:flex;align-items:center;gap:18px;flex:none;min-width:0">
+        <a href="5GPN Relay iOS Redesign.dc.html" style="display:flex;align-items:center;gap:8px;font-size:19px;font-weight:600;letter-spacing:-0.01em;color:var(--ink);flex:none">
+          <span style="width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--accentSoft)"></span>
+          <span>5GPN <span style="color:var(--faint);font-weight:400">Relay</span></span>
+        </a>
+        <div class="nav-seg" style="display:flex;align-items:center;background:var(--surface);border:1px solid var(--border2);border-radius:980px;padding:3px;gap:2px">
+          <a href="" title="切换到 DNS 网关方案" style="display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:0 14px;border-radius:980px;color:var(--muted);font-size:12.5px;font-weight:500;white-space:nowrap" style-hover="color:var(--ink)">DNS 网关<span style="font-size:11px;opacity:.6;transform:translateY(-1px)">↗</span></a>
+          <span style="display:inline-flex;align-items:center;min-height:28px;padding:0 14px;border-radius:980px;background:var(--card);color:var(--ink);font-size:12.5px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08);white-space:nowrap">Apple Relay</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <a href="5GPN Relay iOS Redesign.dc.html" style="display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 4px;color:var(--muted);white-space:nowrap;font-size:14px" style-hover="color:var(--ink)">‹ 返回首页</a>
+        <button type="button" onClick="{{ toggleTheme }}" title="切换主题（浅色 / 深色）" style="display:inline-flex;align-items:center;gap:6px;min-height:36px;border:1px solid var(--border);background:var(--card);color:var(--ink);padding:0 12px;border-radius:980px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,.03)" style-hover="border-color:var(--strokeIn);background:var(--surface)" style-active="transform:scale(.97)">
+          <span style="color:var(--muted);font-size:14px">◐</span><span class="theme-label">{{ themeLabel }}</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main data-screen-label="生成器" style="max-width:1040px;margin:0 auto;padding:64px 24px 110px">
+    <div style="max-width:660px;margin-bottom:44px">
+      <p style="font-size:12.5px;font-weight:600;letter-spacing:0.06em;color:var(--accent);margin:0 0 15px;font-family:ui-monospace,'SF Mono',Menlo,monospace">生成器 · 本地生成，令牌不离开这台设备</p>
+      <h1 style="font-size:clamp(34px,5.2vw,54px);line-height:1.04;letter-spacing:-0.025em;font-weight:700;margin:0 0 20px">生成你的 iOS 配置</h1>
+      <p style="font-size:19px;line-height:1.55;color:var(--muted);margin:0">填入中继域名和令牌，选一种分流模式，需要时加自定义规则。描述文件完全在你的浏览器里生成——不上传、不进仓库。</p>
+    </div>
+
+    <div class="gen-grid" style="display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr);gap:26px;align-items:start">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:22px;padding:30px;display:flex;flex-direction:column;gap:24px;box-shadow:0 1px 3px rgba(0,0,0,.03)">
+        <div>
+          <label for="host" style="font-size:13px;font-weight:600;color:var(--ink);margin:0 0 9px;display:block">中继域名</label>
+          <input id="host" type="text" inputMode="url" placeholder="relay.example.com" onInput="{{ onHost }}" style="width:100%;padding:13px 15px;border:1px solid var(--strokeIn);border-radius:12px;font-size:16px;background:var(--card);color:var(--ink);font-family:inherit;box-sizing:border-box" style-focus="outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accentGlow)" />
+          <p style="font-size:12.5px;color:var(--faint);margin:9px 0 0;line-height:1.5">你的 KFCHost 主机域名，经专线可达。写入配置的 <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.85em;background:var(--surface);padding:1px 6px;border-radius:6px">HTTP2RelayURL</span>。</p>
+        </div>
+        <div>
+          <label for="token" style="font-size:13px;font-weight:600;color:var(--ink);margin:0 0 9px;display:block">令牌 Token</label>
+          <input id="token" type="password" autoComplete="new-password" spellCheck="false" placeholder="relayctl 输出的 X-Relay-Token" onInput="{{ onToken }}" style="width:100%;padding:13px 15px;border:1px solid var(--strokeIn);border-radius:12px;font-size:16px;background:var(--card);color:var(--ink);font-family:ui-monospace,'SF Mono',Menlo,monospace;box-sizing:border-box" style-focus="outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accentGlow)" />
+          <p style="font-size:12.5px;color:var(--faint);margin:9px 0 0;line-height:1.5;display:flex;gap:6px;align-items:flex-start"><span style="color:#34c759;flex:none">●</span>令牌只留在本机，不会写进二维码或链接。</p>
+        </div>
+        <div>
+          <span style="font-size:13px;font-weight:600;color:var(--ink);margin:0 0 9px;display:block">分流模式</span>
+          <div role="group" aria-label="分流模式" style="display:flex;flex-direction:column;gap:12px">
+            <button type="button" class="mode-option mode-black" aria-pressed="{{ blackPressed }}" onClick="{{ setBlack }}" style="text-align:left;cursor:pointer;width:100%;padding:16px 18px;border:2px solid var(--strokeIn);background:transparent;border-radius:15px;font-family:inherit;color:var(--ink)">
+              <div style="display:flex;align-items:center;justify-content:space-between;min-height:22px">
+                <span style="font-size:12.5px;font-weight:600;font-family:ui-monospace,'SF Mono',Menlo,monospace;white-space:nowrap;color:var(--accent)">黑名单模式</span>
+                <span class="mode-badge" style="width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;align-items:center;justify-content:center;flex:none;background:var(--accent)">✓</span>
+              </div>
+              <div style="font-size:15.5px;font-weight:600;margin-top:9px">只有命中的走中继</div>
+              <div style="font-size:13px;color:var(--faint);margin-top:3px">命中名单的目标走 5GPN 中继，其余全部直连 · 文件小</div>
+            </button>
+            <button type="button" class="mode-option mode-white" aria-pressed="{{ whitePressed }}" onClick="{{ setWhite }}" style="text-align:left;cursor:pointer;width:100%;padding:16px 18px;border:2px solid var(--strokeIn);background:transparent;border-radius:15px;font-family:inherit;color:var(--ink)">
+              <div style="display:flex;align-items:center;justify-content:space-between;min-height:22px">
+                <span style="font-size:12.5px;font-weight:600;font-family:ui-monospace,'SF Mono',Menlo,monospace;white-space:nowrap;color:#34c759">白名单模式</span>
+                <span class="mode-badge" style="width:22px;height:22px;border-radius:50%;color:#fff;font-size:12px;align-items:center;justify-content:center;flex:none;background:#34c759">✓</span>
+              </div>
+              <div style="font-size:15.5px;font-weight:600;margin-top:9px">未命中的全部走中继</div>
+              <div style="font-size:13px;color:var(--faint);margin-top:3px">只有命中名单的目标直连，其余全部走中继 · 文件较大</div>
+            </button>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:22px">
+          <span style="font-size:13px;font-weight:600;color:var(--ink);margin:0 0 4px;display:block">自定义规则 · 在所选模式上叠加</span>
+          <p style="font-size:12.5px;color:var(--faint);margin:0 0 16px;line-height:1.5">无论选哪种模式，都能自己指定一部分目标的走向。每行一个域名，自动含子域。</p>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <label for="include" style="font-size:12.5px;font-weight:600;margin:0 0 8px;display:flex;align-items:center;gap:7px;color:var(--accent)"><span style="width:7px;height:7px;border-radius:50%;background:var(--accent)"></span>走代理的规则 · 强制走中继</label>
+              <textarea id="include" rows="3" placeholder="每行一个域名，例如
+example.com
+news.site" onInput="{{ onInclude }}" style="width:100%;padding:12px 14px;border:1px solid var(--strokeIn);border-radius:12px;font-size:14px;background:var(--card);color:var(--ink);font-family:ui-monospace,'SF Mono',Menlo,monospace;resize:vertical;line-height:1.6;min-height:92px;box-sizing:border-box" style-focus="outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accentGlow)"></textarea>
+            </div>
+            <div>
+              <label for="exclude" style="font-size:12.5px;font-weight:600;margin:0 0 8px;display:flex;align-items:center;gap:7px;color:#248a3d"><span style="width:7px;height:7px;border-radius:50%;background:#34c759"></span>不走代理的规则 · 强制直连</label>
+              <textarea id="exclude" rows="3" placeholder="每行一个域名" onInput="{{ onExclude }}" style="width:100%;padding:12px 14px;border:1px solid var(--strokeIn);border-radius:12px;font-size:14px;background:var(--card);color:var(--ink);font-family:ui-monospace,'SF Mono',Menlo,monospace;resize:vertical;line-height:1.6;min-height:92px;box-sizing:border-box" style-focus="outline:none;border-color:#34c759;box-shadow:0 0 0 4px rgba(52,199,89,.14)"></textarea>
+            </div>
+          </div>
+        </div>
+        <details style="border-top:1px solid var(--border);padding-top:20px">
+          <summary style="cursor:pointer;font-size:13px;color:var(--accent);font-family:ui-monospace,'SF Mono',Menlo,monospace;list-style:none;display:flex;align-items:center;gap:7px"><span style="font-size:11px">▸</span>高级：DNS / 传输</summary>
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:20px">
+            <div>
+              <label for="doh" style="font-size:13px;font-weight:600;color:var(--ink);margin:0 0 9px;display:block">DoH 解析器（可选）</label>
+              <input id="doh" type="text" inputMode="url" placeholder="https://relay.example.com/dns-query" style="width:100%;padding:13px 15px;border:1px solid var(--strokeIn);border-radius:12px;font-size:16px;background:var(--card);color:var(--ink);font-family:ui-monospace,'SF Mono',Menlo,monospace;box-sizing:border-box" style-focus="outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accentGlow)" />
+              <p style="font-size:12.5px;color:var(--faint);margin:9px 0 0;line-height:1.5">附带一个 DNS 描述文件，让解析更稳定并正确触发中继。</p>
+            </div>
+            <label style="display:flex;align-items:center;gap:11px;font-size:14.5px;color:var(--ink);cursor:pointer"><input type="checkbox" style="width:19px;height:19px;accent-color:var(--accent);cursor:pointer" /> 同时启用 HTTP/3（QUIC）中继地址</label>
+            <label style="display:flex;align-items:center;gap:11px;font-size:14.5px;color:var(--ink);cursor:pointer"><input type="checkbox" defaultChecked="{{ true }}" style="width:19px;height:19px;accent-color:var(--accent);cursor:pointer" /> 允许在「设置」里手动开关中继</label>
+          </div>
+        </details>
+      </div>
+
+      <aside class="gen-aside" style="position:sticky;top:76px;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04),0 20px 50px var(--border2)">
+        <h3 style="font-size:12.5px;font-weight:600;letter-spacing:0.06em;color:var(--faint);margin:0 0 18px;font-family:ui-monospace,'SF Mono',Menlo,monospace">输出</h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border2)">
+          <span style="font-size:13.5px;color:var(--muted)">模式</span>
+          <sc-if value="{{ isBlack }}" hint-placeholder-val="{{ true }}"><b style="font-size:13.5px;font-weight:600;color:var(--accent)">黑名单模式</b></sc-if>
+          <sc-if value="{{ isWhite }}" hint-placeholder-val="{{ false }}"><b style="font-size:13.5px;font-weight:600;color:#248a3d">白名单模式</b></sc-if>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border2)">
+          <span style="font-size:13.5px;color:var(--muted)">走中继域名</span><b style="font-size:13.5px;font-weight:600;color:var(--accent)">{{ oMatch }}</b>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border2)">
+          <span style="font-size:13.5px;color:var(--muted)">直连域名</span><b style="font-size:13.5px;font-weight:600;color:#248a3d">{{ oExcl }}</b>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 0">
+          <span style="font-size:13.5px;color:var(--muted)">预估大小</span><b style="font-size:13.5px;font-weight:600;font-family:ui-monospace,'SF Mono',Menlo,monospace;color:var(--ink)">{{ oSize }}</b>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:11px;margin-top:22px">
+          <sc-if value="{{ ready }}" hint-placeholder-val="{{ false }}">
+            <button type="button" style="width:100%;padding:14px;border-radius:13px;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#0071e3;color:#fff;border:none;cursor:pointer;font-weight:500;font-family:inherit" style-hover="background:#0077ed">安装到本机</button>
+            <button type="button" style="width:100%;padding:13px;border:1px solid var(--strokeIn);border-radius:13px;background:var(--card);color:var(--ink);font-size:15px;font-weight:500;text-align:center;cursor:pointer;font-family:inherit" style-hover="background:var(--surface)">下载 .mobileconfig</button>
+          </sc-if>
+          <sc-if value="{{ notReady }}" hint-placeholder-val="{{ true }}">
+            <div style="width:100%;padding:14px;border-radius:13px;background:var(--surface);color:var(--faint);font-size:15px;font-weight:500;text-align:center;box-sizing:border-box">填入域名和令牌后即可生成</div>
+          </sc-if>
+        </div>
+        <div style="margin-top:16px;padding:12px 14px;min-height:40px;display:flex;align-items:center;background:var(--surface);border:1px solid var(--hairline);border-radius:12px;font-size:12.5px;color:var(--muted);line-height:1.55">{{ modeNote }}</div>
+        <div style="margin-top:24px;padding-top:22px;border-top:1px solid var(--border2)">
+          <div style="width:132px;height:132px;margin:0 auto 12px;background:var(--surface);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:12px;font-family:ui-monospace,'SF Mono',Menlo,monospace">QR</div>
+          <p style="font-size:12px;color:var(--faint);text-align:center;margin:0 0 8px;line-height:1.5">用另一台手机扫码，在手机上打开这个生成器<br />（不含令牌）</p>
+          <span style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:10.5px;word-break:break-all;color:var(--faint);display:block;text-align:center">https://moooyo.github.io/5gpn-relay/generate.html</span>
+        </div>
+      </aside>
+    </div>
+
+    <details style="margin-top:30px">
+      <summary style="cursor:pointer;font-size:13px;color:var(--faint);font-family:ui-monospace,'SF Mono',Menlo,monospace;list-style:none;display:flex;align-items:center;gap:7px"><span style="font-size:11px">▸</span>查看生成的 .mobileconfig 源码（令牌已隐藏）</summary>
+      <pre style="margin-top:14px;background:#1d1d1f;color:#e8e8ed;border-radius:16px;padding:22px;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:12.5px;line-height:1.6;overflow:auto;max-height:440px;white-space:pre-wrap;word-break:break-word">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+  &lt;key&gt;PayloadContent&lt;/key&gt;
+  &lt;array&gt;
+    &lt;dict&gt;
+      &lt;key&gt;PayloadType&lt;/key&gt;&lt;string&gt;com.apple.relay.managed&lt;/string&gt;
+      &lt;key&gt;Relays&lt;/key&gt;
+      &lt;array&gt;
+        &lt;dict&gt;
+          &lt;key&gt;HTTP2RelayURL&lt;/key&gt;&lt;string&gt;https://relay.example.com:443&lt;/string&gt;
+          &lt;key&gt;AdditionalHTTPHeaderFields&lt;/key&gt;
+          &lt;dict&gt;&lt;key&gt;X-Relay-Token&lt;/key&gt;&lt;string&gt;••••••••&lt;/string&gt;&lt;/dict&gt;
+        &lt;/dict&gt;
+      &lt;/array&gt;
+      &lt;key&gt;MatchDomains&lt;/key&gt;&lt;array&gt;…&lt;/array&gt;
+      &lt;key&gt;ExcludedDomains&lt;/key&gt;&lt;array&gt;…&lt;/array&gt;
+    &lt;/dict&gt;
+  &lt;/array&gt;
+  &lt;key&gt;PayloadDisplayName&lt;/key&gt;&lt;string&gt;5GPN Relay&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;</pre>
+    </details>
+
+    <p style="color:var(--faint);font-size:13px;margin-top:28px;line-height:1.6;font-family:ui-monospace,'SF Mono',Menlo,monospace;max-width:760px">安装后 iOS 会显示「未验证」——这是未签名描述文件的正常提示。在 设置 › 通用 › VPN、DNS 与设备管理 里可查看或删除。内置精选域名列表用于浏览器生成；完整每日更新列表由服务端 <span style="color:var(--accent)">relayctl profiles</span> 提供。</p>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;,&quot;section&quot;:&quot;主题&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#5e5ce6&quot;,&quot;#0071e3&quot;,&quot;#bf5af2&quot;,&quot;#30b0c7&quot;],&quot;default&quot;:&quot;#5e5ce6&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;主题&quot;}}">
+class Component extends DCLogic {
+  state = { theme: null, host: '', token: '', inc: '', exc: '', mode: 'black' };
+  effTheme() { return this.state.theme ?? this.props.theme ?? 'light'; }
+  applyTheme() {
+    const el = this.rootEl; if (!el) return;
+    const dark = this.effTheme() === 'dark';
+    const v = dark ? {
+      '--bg': '#0a0a0c', '--surface': '#141416', '--card': '#1c1c1f', '--ink': '#f5f5f7',
+      '--muted': '#a1a1a6', '--faint': '#8a8a8e', '--border': 'rgba(255,255,255,.12)',
+      '--border2': 'rgba(255,255,255,.08)', '--hairline': 'rgba(255,255,255,.1)',
+      '--strokeIn': 'rgba(255,255,255,.2)', '--heroWash': '#17171f', '--navbg': 'rgba(16,16,18,.72)'
+    } : {
+      '--bg': '#fbfbfd', '--surface': '#f5f5f7', '--card': '#ffffff', '--ink': '#1d1d1f',
+      '--muted': '#6e6e73', '--faint': '#86868b', '--border': 'rgba(0,0,0,.08)',
+      '--border2': 'rgba(0,0,0,.06)', '--hairline': 'rgba(0,0,0,.07)',
+      '--strokeIn': 'rgba(0,0,0,.16)', '--heroWash': '#f0f0ff', '--navbg': 'rgba(251,251,253,.82)'
+    };
+    for (const k in v) el.style.setProperty(k, v[k]);
+    const ac = this.props.accent ?? '#5e5ce6';
+    el.style.setProperty('--accent', ac);
+    el.style.setProperty('--accentSoft', ac + '1a');
+    el.style.setProperty('--accentGlow', ac + '2e');
+    document.body.style.background = v['--bg'];
+  }
+  componentDidMount() { this.applyTheme(); }
+  componentDidUpdate() { this.applyTheme(); }
+  count(s) { return s.split('\n').map(x => x.trim()).filter(Boolean).length; }
+  renderVals() {
+    const black = this.state.mode === 'black';
+    const inc = this.count(this.state.inc), exc = this.count(this.state.exc);
+    const fmt = (n) => n.toLocaleString('en-US').replace(/,/g, ' ');
+    const ready = !!(this.state.host.trim() && this.state.token.trim());
+    return {
+      rootRef: (el) => { this.rootEl = el; if (el) this.applyTheme(); },
+      themeLabel: this.effTheme() === 'dark' ? '深色' : '浅色',
+      toggleTheme: () => this.setState({ theme: this.effTheme() === 'dark' ? 'light' : 'dark' }),
+      onHost: (e) => this.setState({ host: e.target.value }),
+      onToken: (e) => this.setState({ token: e.target.value }),
+      onInclude: (e) => this.setState({ inc: e.target.value }),
+      onExclude: (e) => this.setState({ exc: e.target.value }),
+      setBlack: () => this.setState({ mode: 'black' }),
+      setWhite: () => this.setState({ mode: 'white' }),
+      blackPressed: black ? 'true' : 'false',
+      whitePressed: black ? 'false' : 'true',
+      isBlack: black, isWhite: !black,
+      oMatch: black ? fmt(1284 + inc) + ' 条' : (exc || inc ? '其余全部' : '其余全部'),
+      oExcl: black ? (exc ? '其余全部 + ' + exc + ' 条' : '其余全部') : fmt(112409 + exc) + ' 条',
+      oSize: black ? '≈150 KB' : '≈3.8 MB',
+      modeNote: black
+        ? '黑名单：描述文件小、省专线，适合日常使用；名单未覆盖的新目标默认直连。'
+        : '白名单：覆盖最全，未命中名单的一律走中继；目标在 KFCHost 节点解析，链路最干净。',
+      ready, notReady: !ready
+    };
+  }
+}
+</script>
+</body>
+</html>

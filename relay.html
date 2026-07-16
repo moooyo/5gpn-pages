@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>5GPN Relay — 无需 VPN，也能分流</title>
+  <meta name="description" content="依靠 5GPN 与 Apple Relay 能力，实现按规则的分流访问——装的是描述文件，不是 VPN，状态栏干干净净。">
+  <meta id="themeColor" name="theme-color" content="#fbfbfd">
+  <link rel="canonical" href="https://5gpn.de/relay.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="prefetch" href="index.html">
+  <link rel="prefetch" href="generate.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="5GPN Relay">
+  <meta property="og:title" content="5GPN Relay — 无需 VPN，也能分流">
+  <meta property="og:description" content="Apple Network Relay（MASQUE）按规则分流；装的是描述文件，不是 VPN。">
+  <meta property="og:url" content="https://5gpn.de/relay.html">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="5GPN Relay — 无需 VPN，也能分流">
+  <meta name="twitter:description" content="Apple Network Relay（MASQUE）按规则分流；装的是描述文件，不是 VPN。">
+
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem('5gpn-theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', theme);
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#content">跳到主要内容</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-leading">
+        <a class="brand" href="#top" aria-label="5GPN Relay 首页">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span>5GPN <span class="brand-faint">Relay</span></span>
+        </a>
+        <div class="nav-segment" role="group" aria-label="方案切换">
+          <a class="nav-segment-link" href="index.html" title="切换到 DNS 网关方案">
+            DNS 网关 <span class="external-glyph" aria-hidden="true">↗</span>
+          </a>
+          <span class="nav-segment-current" aria-current="page">Apple Relay</span>
+        </div>
+      </div>
+
+      <nav class="nav-links" aria-label="主导航">
+        <a class="nav-external" href="https://kfchost.com/center/dashboard?aff=AFF112062USFL" target="_blank" rel="noopener noreferrer">
+          <span>KFCHost</span><span class="external-glyph" aria-hidden="true">↗</span>
+        </a>
+        <a class="nav-external" href="https://github.com/moooyo/5gpn-relay" target="_blank" rel="noopener noreferrer">
+          <span>GitHub</span><span class="external-glyph" aria-hidden="true">↗</span>
+        </a>
+        <button class="theme-button" type="button" data-theme-toggle title="切换主题（自动 / 浅色 / 深色）" aria-label="切换主题（自动 / 浅色 / 深色）">
+          <span class="theme-glyph" aria-hidden="true">◐</span>
+          <span class="theme-label" data-theme-label>自动</span>
+        </button>
+        <a class="nav-cta" href="generate.html">生成配置</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <div id="content" tabindex="-1">
+      <section class="hero" aria-labelledby="relay-hero-title">
+        <p class="eyebrow">Apple Network Relay · MASQUE</p>
+        <h1 id="relay-hero-title">无需 VPN，也能<span>分流</span>。</h1>
+        <p class="hero-lede">依靠 5GPN 与 Apple Relay 能力，实现按规则的分流访问——装的是描述文件，不是 VPN，状态栏干干净净。</p>
+        <div class="hero-actions">
+          <a class="button-primary hero-primary" href="generate.html">生成 iOS 配置 <span aria-hidden="true">→</span></a>
+          <a class="hero-link" href="#how">看它怎么工作 <span aria-hidden="true">›</span></a>
+        </div>
+        <p class="requirement">
+          需配合 <a href="https://kfchost.com/center/dashboard?aff=AFF112062USFL" target="_blank" rel="noopener noreferrer">KFCHost</a>
+          专线主机 + <strong>5GPN 订阅包</strong> 使用
+        </p>
+        <ul class="hero-chips">
+          <li class="hero-chip"><span class="chip-dot chip-dot-green" aria-hidden="true"></span>无 VPN 图标</li>
+          <li class="hero-chip"><span class="chip-dot chip-dot-accent" aria-hidden="true"></span>无需监管 / MDM</li>
+          <li class="hero-chip"><span class="chip-dot chip-dot-orange" aria-hidden="true"></span>覆盖蜂窝</li>
+          <li class="hero-chip"><span class="chip-dot chip-dot-accent" aria-hidden="true"></span>带 UDP/QUIC</li>
+        </ul>
+      </section>
+
+      <section class="schematic-section" aria-label="流量分流示意图：iPhone 在分流点把直连目标本地直出，其余经中继走专线到 5GPN 出口">
+        <div class="schematic-card">
+          <svg class="schematic" viewBox="0 0 820 320" width="100%" role="img" aria-labelledby="relay-schematic-title relay-schematic-desc" data-animated-diagram>
+            <title id="relay-schematic-title">Apple Relay 流量分流链路</title>
+            <desc id="relay-schematic-desc">iPhone 在系统分流点把直连目标本地直出，其余流量经 MASQUE 中继和专线送到 5GPN 出口。</desc>
+
+            <path class="route route-neutral" d="M122,172 L176,172"></path>
+            <path class="route route-direct" d="M224,172 C 330,172 362,82 470,82"></path>
+            <path class="route route-proxy" d="M224,172 C 272,172 250,261 300,261"></path>
+            <path class="route route-egress" d="M416,261 L500,261"></path>
+            <path class="route route-proxy" d="M640,261 L700,261"></path>
+
+            <rect class="diagram-node" x="30" y="130" width="92" height="84" rx="14"></rect>
+            <text class="diagram-title" x="76" y="167" text-anchor="middle">iPhone</text>
+            <text class="diagram-caption" x="76" y="187" text-anchor="middle">蜂窝 / Wi-Fi</text>
+
+            <polygon class="diagram-split" points="200,150 224,172 200,194 176,172"></polygon>
+            <text class="diagram-port diagram-mono" x="200" y="216" text-anchor="middle">SPLIT</text>
+
+            <rect class="diagram-node diagram-node-direct" x="470" y="44" width="200" height="76" rx="14"></rect>
+            <text class="diagram-title" x="570" y="79" text-anchor="middle">直连目标</text>
+            <text class="diagram-direct-caption" x="570" y="99" text-anchor="middle">本地直连 · DIRECT</text>
+
+            <rect class="diagram-node diagram-node-proxy" x="300" y="230" width="116" height="62" rx="14"></rect>
+            <text class="diagram-title diagram-title-compact" x="358" y="258" text-anchor="middle">relay</text>
+            <text class="diagram-caption diagram-caption-small" x="358" y="277" text-anchor="middle">MASQUE</text>
+            <text class="diagram-egress-label diagram-mono" x="458" y="251" text-anchor="middle">专线</text>
+
+            <rect class="diagram-node" x="500" y="230" width="140" height="62" rx="14"></rect>
+            <text class="diagram-title diagram-title-compact" x="570" y="258" text-anchor="middle">5GPN 出口</text>
+            <text class="diagram-caption diagram-caption-small" x="570" y="277" text-anchor="middle">EXIT · 专线节点</text>
+
+            <rect class="diagram-node" x="700" y="225" width="92" height="72" rx="14"></rect>
+            <text class="diagram-title diagram-title-compact" x="746" y="256" text-anchor="middle">世界</text>
+            <text class="diagram-caption diagram-internet" x="746" y="275" text-anchor="middle">INTERNET</text>
+
+            <circle class="packet packet-direct" r="4.5">
+              <animateMotion dur="2.8s" repeatCount="indefinite" path="M122,172 L200,172 C 330,172 362,82 470,82"></animateMotion>
+            </circle>
+            <circle class="packet packet-direct" r="4.5">
+              <animateMotion dur="2.8s" begin="-1.4s" repeatCount="indefinite" path="M122,172 L200,172 C 330,172 362,82 470,82"></animateMotion>
+            </circle>
+            <circle class="packet packet-proxy" r="4.5">
+              <animateMotion dur="4.6s" repeatCount="indefinite" path="M122,172 L200,172 C 272,172 250,261 300,261 L416,261 L500,261 L640,261 L700,261"></animateMotion>
+            </circle>
+            <circle class="packet packet-proxy" r="4.5">
+              <animateMotion dur="4.6s" begin="-1.5s" repeatCount="indefinite" path="M122,172 L200,172 C 272,172 250,261 300,261 L416,261 L500,261 L640,261 L700,261"></animateMotion>
+            </circle>
+            <circle class="packet packet-proxy" r="4.5">
+              <animateMotion dur="4.6s" begin="-3s" repeatCount="indefinite" path="M122,172 L200,172 C 272,172 250,261 300,261 L416,261 L500,261 L640,261 L700,261"></animateMotion>
+            </circle>
+          </svg>
+        </div>
+      </section>
+
+      <section class="section section-surface" id="how" aria-labelledby="relay-how-title">
+        <div class="section-inner">
+          <div class="section-heading section-heading-large">
+            <p class="eyebrow">原理 · 一个数据包的旅程</p>
+            <h2 id="relay-how-title">它不是 VPN，<br>是一个按规则工作的系统级中继</h2>
+            <p class="section-sub">iOS 17 起，Apple 把系统级中继背后的 MASQUE 机制开放给了描述文件。整条链路是顺序发生的。</p>
+          </div>
+          <div class="journey-grid">
+            <article class="journey-card">
+              <span class="journey-number">01</span>
+              <h3>解析</h3>
+              <p>先解析目标地址，判断它该本地直连还是交给 5GPN 中继；配套加密 DNS 保证解析稳定可靠。</p>
+            </article>
+            <article class="journey-card">
+              <span class="journey-number">02</span>
+              <h3>判定</h3>
+              <p>按所选规则匹配目标（自动含子域）：命中直连集就本地直出，否则交给中继。</p>
+            </article>
+            <article class="journey-card">
+              <span class="journey-number">03</span>
+              <h3>中继</h3>
+              <p>用 CONNECT / CONNECT-UDP（RFC 9298）经专线送到 KFCHost 节点，由节点在出口重新解析并连出——是 MASQUE 而非隧道网卡，状态栏没有 VPN 图标。</p>
+            </article>
+            <article class="journey-card">
+              <span class="journey-number journey-number-green">04</span>
+              <h3>直连</h3>
+              <p>其余流量根本不进隧道，蜂窝 / Wi-Fi 正常出口，专线只承载真正需要它的流量。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="modes" aria-labelledby="relay-modes-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">两种模式 · 都支持自定义包含 / 排除</p>
+            <h2 id="relay-modes-title">选一条基线规则，再按需微调</h2>
+          </div>
+          <div class="mode-grid">
+            <article class="mode-card relay-mode-card relay-mode-black">
+              <span class="mode-tag relay-mode-tag-black">黑名单模式</span>
+              <h3>只有命中的走中继</h3>
+              <p>命中名单的目标走 5GPN 中继，其余全部本地直连。</p>
+              <ul class="relay-mode-list">
+                <li class="relay-mode-highlight"><span class="size-badge size-badge-indigo">≈150 KB</span>描述文件小，专线只跑该跑的</li>
+                <li><span class="bullet bullet-accent" aria-hidden="true">·</span>省专线、省电，适合日常使用</li>
+                <li><span class="bullet bullet-accent" aria-hidden="true">·</span>名单未覆盖的新目标会走直连（随订阅更新）</li>
+              </ul>
+            </article>
+            <article class="mode-card relay-mode-card relay-mode-white">
+              <span class="mode-tag relay-mode-tag-white">白名单模式</span>
+              <h3>未命中的全部走中继</h3>
+              <p>只有命中名单的目标本地直连，其余全部走中继，覆盖最全。</p>
+              <ul class="relay-mode-list">
+                <li class="relay-mode-highlight"><span class="size-badge size-badge-amber">≈3.8 MB</span>名单约 11 万条，描述文件较大</li>
+                <li><span class="bullet bullet-green" aria-hidden="true">·</span>目标在 KFCHost 节点解析，链路最干净</li>
+                <li><span class="bullet bullet-green" aria-hidden="true">·</span>新目标默认走中继不会漏，适合全量分流</li>
+              </ul>
+            </article>
+          </div>
+          <p class="mono-note">规则名单随 5GPN 订阅包每日更新分发，可在生成器里叠加自定义包含 / 排除</p>
+        </div>
+      </section>
+
+      <section class="section section-surface" id="start" aria-labelledby="relay-start-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <p class="eyebrow">开始使用 · 三步</p>
+            <h2 id="relay-start-title">配合 KFCHost 与 5GPN 订阅包</h2>
+            <p class="section-sub">5GPN Relay 负责分流与描述文件；专线出口与规则订阅由 KFCHost 与 5GPN 订阅包提供。</p>
+          </div>
+          <div class="setup-grid">
+            <article class="setup-card">
+              <span class="step-badge">1</span>
+              <h3>开通 KFCHost 专线主机</h3>
+              <p>在 KFCHost 开通一台经专线可达的主机，作为 5GPN 的专线出口节点。</p>
+              <a href="https://kfchost.com/center/dashboard?aff=AFF112062USFL" target="_blank" rel="noopener noreferrer">前往 KFCHost 官网 <span aria-hidden="true">›</span></a>
+            </article>
+            <article class="setup-card">
+              <span class="step-badge">2</span>
+              <h3>订阅 5GPN</h3>
+              <p>获取 5GPN 订阅包与访问令牌。规则名单每日更新，随订阅自动分发。</p>
+            </article>
+            <article class="setup-card">
+              <span class="step-badge">3</span>
+              <h3>生成并安装配置</h3>
+              <p>在生成器填入域名与令牌，选模式、加规则，一键安装到 iPhone。</p>
+              <a href="generate.html">打开生成器 <span aria-hidden="true">›</span></a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="install" aria-labelledby="relay-install-title">
+        <div class="install-inner">
+          <div class="section-heading">
+            <p class="eyebrow">安装 · KFCHost 专线主机</p>
+            <h2 id="relay-install-title">一条命令拉起中继服务器</h2>
+            <p class="section-sub section-sub-small">在你的 KFCHost 专线主机上（Debian / Ubuntu / CentOS / Rocky，root）运行。它会装好 Docker、gum、Node，签证书、起 Envoy，并生成 iOS 配置 + 二维码。</p>
+          </div>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <span class="terminal-light terminal-light-red" aria-hidden="true"></span>
+              <span class="terminal-light terminal-light-yellow" aria-hidden="true"></span>
+              <span class="terminal-light terminal-light-green" aria-hidden="true"></span>
+              <span class="terminal-label">root@kfchost-box</span>
+            </div>
+            <div class="terminal-command">
+              <pre><span class="terminal-prompt">$</span> curl -fsSL <span class="terminal-url">https://moooyo.github.io/5gpn-relay/install.sh</span> | sudo bash</pre>
+              <button class="copy-button" type="button" data-copy-command data-copy-text="curl -fsSL https://moooyo.github.io/5gpn-relay/install.sh | sudo bash" aria-label="复制 Relay 安装命令">
+                <span data-copy-label aria-live="polite">复制</span>
+              </button>
+            </div>
+          </div>
+          <p class="install-note">需要一个指向 KFCHost 主机、经专线可达的域名。装完后运行 <code class="code-chip code-chip-accent">relayctl profiles</code> 生成配置并出二维码，或用<a href="generate.html">网页生成器</a>自定义规则。</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <div class="footer-brand">
+          <span class="footer-brand-dot" aria-hidden="true"></span>
+          <span>5GPN Relay</span>
+        </div>
+        <p>基于 Apple Network Relay（MASQUE）把 iOS 流量按规则做内网分流，经专线直达 KFCHost 节点——无 VPN 图标。需配合 KFCHost + 5GPN 订阅包。</p>
+        <div class="compliance">
+          <p><strong>未签名描述文件</strong>安装时显示「未验证」，自用可接受。</p>
+          <p><strong>令牌即权限</strong>：泄露 = 开放代理，请用 <code class="footer-code">relayctl rotate</code> 轮换。</p>
+        </div>
+      </div>
+      <div>
+        <h2>页面</h2>
+        <nav class="footer-links" aria-label="Relay 页面导航">
+          <a href="#how">原理</a>
+          <a href="#modes">两种模式</a>
+          <a href="#start">开始使用</a>
+          <a href="#install">安装</a>
+        </nav>
+      </div>
+      <div>
+        <h2>相关</h2>
+        <nav class="footer-links" aria-label="Relay 相关链接">
+          <a href="generate.html">生成配置</a>
+          <a href="index.html">DNS 网关方案</a>
+          <a href="https://github.com/moooyo/5gpn-relay" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://kfchost.com/center/dashboard?aff=AFF112062USFL" target="_blank" rel="noopener noreferrer">KFCHost 官网</a>
+        </nav>
+      </div>
+      <div>
+        <h2>说明</h2>
+        <p>请遵守当地法律法规与网络使用政策。仅技术工具，需配合 KFCHost 专线主机与 5GPN 订阅包使用；与 DNS 网关方案共享同一设计语言。</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "generated": "2026-07-15T20:12:15.955Z",
+  "counts": {
+    "direct": 111645,
+    "relay": 4254
+  },
+  "sources": {
+    "direct": [
+      "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf",
+      "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf",
+      "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf"
+    ],
+    "relay": "https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt"
+  }
+}

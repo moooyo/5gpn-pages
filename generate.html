@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="referrer" content="no-referrer">
+  <title>生成 iOS 配置 — 5GPN Relay</title>
+  <meta name="description" content="在浏览器里本地生成 Apple Network Relay 描述文件，选模式、加自定义规则，直接唤起安装。令牌只留在本机。">
+  <meta id="themeColor" name="theme-color" content="#fbfbfd">
+  <link rel="canonical" href="https://5gpn.de/generate.html">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="prefetch" href="index.html">
+  <link rel="prefetch" href="relay.html">
+  <script>
+    (function () {
+      try {
+        var theme = localStorage.getItem('5gpn-theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', theme);
+        }
+      } catch (error) {}
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#generator">跳到生成器</a>
+
+  <header class="nav">
+    <div class="nav-inner nav-inner-narrow">
+      <div class="nav-leading">
+        <a class="brand" href="relay.html" aria-label="5GPN Relay 首页">
+          <span class="brand-dot" aria-hidden="true"></span>
+          <span>5GPN <span class="brand-faint">Relay</span></span>
+        </a>
+        <div class="nav-segment" role="group" aria-label="方案切换">
+          <a class="nav-segment-link" href="index.html" title="切换到 DNS 网关方案">
+            DNS 网关 <span class="external-glyph" aria-hidden="true">↗</span>
+          </a>
+          <span class="nav-segment-current" aria-current="page">Apple Relay</span>
+        </div>
+      </div>
+      <nav class="nav-links" aria-label="生成器导航">
+        <a class="nav-back" href="relay.html">‹ 返回首页</a>
+        <button class="theme-button" type="button" data-theme-toggle title="切换主题（自动 / 浅色 / 深色）" aria-label="切换主题（自动 / 浅色 / 深色）">
+          <span class="theme-glyph" aria-hidden="true">◐</span>
+          <span class="theme-label" data-theme-label>自动</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="generator-main" id="generator" tabindex="-1">
+    <div class="generator-intro">
+      <p class="eyebrow">生成器 · 本地生成，令牌不离开这台设备</p>
+      <h1>生成你的 iOS 配置</h1>
+      <p class="generator-lede">填入中继域名和令牌，选一种分流模式，需要时加自定义规则。描述文件完全在你的浏览器里生成——不上传、不进仓库。</p>
+    </div>
+
+    <div class="generator-grid">
+      <div class="generator-form" id="genForm">
+        <div>
+          <label class="field-label" for="host">中继域名</label>
+          <input class="form-input" id="host" name="host" type="text" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="relay.example.com">
+          <p class="field-hint">你的 KFCHost 主机域名，经专线可达。写入配置的 <code class="code-chip">HTTP2RelayURL</code>。</p>
+        </div>
+
+        <div>
+          <label class="field-label" for="token">令牌 Token</label>
+          <input class="form-input mono" id="token" name="token" type="password" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="relayctl 输出的 X-Relay-Token">
+          <p class="field-hint field-hint-private"><span class="privacy-dot" aria-hidden="true">●</span>令牌只留在本机，不会写进二维码或链接。</p>
+        </div>
+
+        <fieldset class="generator-fieldset">
+          <legend class="field-label">分流模式</legend>
+          <div class="mode-select">
+            <button class="generator-mode generator-mode-black" id="modeBlack" type="button" aria-pressed="true">
+              <span class="generator-mode-top">
+                <span class="generator-mode-tag">黑名单模式</span>
+                <span class="generator-mode-badge" aria-hidden="true">✓</span>
+              </span>
+              <span class="generator-mode-title">只有命中的走中继</span>
+              <span class="generator-mode-description">命中名单的目标走 5GPN 中继，其余全部直连 · 文件小</span>
+            </button>
+            <button class="generator-mode generator-mode-white" id="modeWhite" type="button" aria-pressed="false">
+              <span class="generator-mode-top">
+                <span class="generator-mode-tag">白名单模式</span>
+                <span class="generator-mode-badge" aria-hidden="true">✓</span>
+              </span>
+              <span class="generator-mode-title">未命中的全部走中继</span>
+              <span class="generator-mode-description">只有命中名单的目标直连，其余全部走中继 · 文件较大</span>
+            </button>
+          </div>
+        </fieldset>
+
+        <div class="generator-rules">
+          <span class="field-label">自定义规则 · 在所选模式上叠加</span>
+          <p class="rules-intro">无论选哪种模式，都能自己指定一部分目标的走向。每行一个域名，自动含子域。</p>
+          <div class="rules-fields">
+            <div>
+              <label class="rule-label rule-label-proxy" for="include"><span class="rule-label-dot" aria-hidden="true"></span>走代理的规则 · 强制走中继</label>
+              <textarea class="form-textarea" id="include" rows="3" placeholder="每行一个域名，例如&#10;example.com&#10;news.site"></textarea>
+            </div>
+            <div>
+              <label class="rule-label rule-label-direct" for="exclude"><span class="rule-label-dot" aria-hidden="true"></span>不走代理的规则 · 强制直连</label>
+              <textarea class="form-textarea form-textarea-direct" id="exclude" rows="3" placeholder="每行一个域名"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <details class="generator-advanced">
+          <summary><span class="details-caret" aria-hidden="true">▸</span>高级：DNS / 传输</summary>
+          <div class="advanced-fields">
+            <div>
+              <label class="field-label" for="doh">DoH 解析器（可选）</label>
+              <input class="form-input mono" id="doh" type="text" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="https://relay.example.com/dns-query">
+              <p class="field-hint">附带一个 DNS 描述文件，让解析更稳定并正确触发中继。</p>
+            </div>
+            <label class="check-row"><input id="http3" type="checkbox">同时启用 HTTP/3（QUIC）中继地址</label>
+            <label class="check-row"><input id="uiToggle" type="checkbox" checked>允许在「设置」里手动开关中继</label>
+          </div>
+        </details>
+      </div>
+
+      <aside class="generator-output" aria-labelledby="output-title">
+        <h2 id="output-title">输出</h2>
+        <div class="output-stat"><span>模式</span><strong class="indigo" id="oMode">黑名单模式</strong></div>
+        <div class="output-stat"><span>走中继域名</span><strong class="indigo" id="oMatch">—</strong></div>
+        <div class="output-stat"><span>直连域名</span><strong class="green" id="oExcl">—</strong></div>
+        <div class="output-stat"><span>预估大小</span><strong class="mono" id="oSize">≈150 KB</strong></div>
+
+        <div class="output-actions">
+          <button class="output-install" id="installBtn" type="button" hidden>安装到本机</button>
+          <a class="output-download" id="dlLink" href="#" download hidden>下载 .mobileconfig</a>
+          <div class="output-disabled" id="notReady">填入域名和令牌后即可生成</div>
+        </div>
+
+        <div class="generator-mode-note" id="modeNote">黑名单：描述文件小、省专线，适合日常使用；名单未覆盖的新目标默认直连。</div>
+
+        <div class="generator-qr">
+          <div class="qr-box" id="qrBox">QR</div>
+          <p class="qr-hint">用另一台手机扫码，在手机上打开这个生成器<br>（不含令牌）</p>
+          <a class="qr-url" id="qrUrl" href="#">generate.html</a>
+        </div>
+      </aside>
+    </div>
+
+    <details class="generator-source" id="sourceDetails">
+      <summary><span class="details-caret" aria-hidden="true">▸</span>查看生成的 .mobileconfig 源码（令牌已隐藏）</summary>
+      <pre id="sourcePre">填入域名和令牌后，这里会显示生成的 .mobileconfig 源码（令牌会被隐藏）。</pre>
+    </details>
+
+    <p class="generator-footnote">安装后 iOS 会显示「未验证」——这是未签名描述文件的正常提示。在 设置 › 通用 › VPN、DNS 与设备管理 里可查看或删除。内置精选域名列表用于浏览器生成；完整每日更新列表由服务端 <span class="accent">relayctl profiles</span> 提供。</p>
+  </main>
+
+  <script src="assets/qrcode.js"></script>
+  <script type="module" src="assets/generate.js"></script>
+</body>
+</html>

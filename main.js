@@ -252,6 +252,10 @@
       root.setAttribute('data-solution-direction', direction);
       root.setAttribute('data-solution-transition', transitionToken);
       var transition = document.startViewTransition(swap);
+      // A second navigation can intentionally supersede an in-flight transition.
+      // Consume `ready` rejections so browsers do not report the expected skip as
+      // an unhandled AbortError.
+      transition.ready.catch(function () {});
       var finishTransition = function () {
         if (root.getAttribute('data-solution-transition') === transitionToken) {
           root.removeAttribute('data-solution-direction');

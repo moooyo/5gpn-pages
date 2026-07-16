@@ -3,10 +3,6 @@
    System type, off-white / near-black neutrals, one indigo brand accent.
    ========================================================================== */
 
-@view-transition {
-  navigation: auto;
-}
-
 :root {
   color-scheme: light;
 

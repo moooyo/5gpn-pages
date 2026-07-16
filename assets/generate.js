@@ -1,8 +1,9 @@
 import { computeDomains, buildProfileFromDomains } from '../lib/profile.mjs';
+import { validateRelayHost } from '../lib/domains.mjs';
 
 const $ = (id) => document.getElementById(id);
 const els = {
-  host: $('host'), token: $('token'), include: $('include'), exclude: $('exclude'),
+  host: $('host'), hostError: $('hostError'), token: $('token'), include: $('include'), exclude: $('exclude'),
   doh: $('doh'), http3: $('http3'), uiToggle: $('uiToggle'),
   modeBlack: $('modeBlack'), modeWhite: $('modeWhite'),
   oMode: $('oMode'), oMatch: $('oMatch'), oExcl: $('oExcl'), oSize: $('oSize'),
@@ -26,6 +27,12 @@ const MODE_NOTE = {
   whitelist: '白名单：覆盖最全，未命中名单的一律走中继；目标在 KFCHost 节点解析，链路最干净。',
 };
 const SOURCE_PLACEHOLDER = '填入域名和令牌后，这里会显示生成的 .mobileconfig 源码（令牌会被隐藏）。';
+const HOST_ERROR = {
+  scheme: '请只填写域名，不要包含 https:// 或 http://。',
+  port: '请只填写域名，不要包含端口（例如 :443）。',
+  suffix: '请只填写域名，不要包含路径、斜杠、参数或片段。',
+  format: '请输入有效的完整域名，例如 relay.example.com；不支持 IP 地址。',
+};
 
 const fetchJSON = async (u) => { const r = await fetch(u); if (!r.ok) throw new Error('load ' + u); return r.json(); };
 const fetchText = async (u) => { const r = await fetch(u); if (!r.ok) throw new Error('load ' + u); return r.text(); };
@@ -52,6 +59,28 @@ function readForm() {
     uiToggle: els.uiToggle.checked,
     dns: doh ? { dohURL: doh } : undefined,
   };
+}
+
+function readValidatedForm() {
+  const form = readForm();
+  const host = validateRelayHost(form.relayHost);
+  form.relayHost = host.value;
+  return { form, host };
+}
+
+function renderHostValidation(host) {
+  const message = HOST_ERROR[host.reason] || '';
+  els.host.setCustomValidity(message);
+  if (message) {
+    els.host.setAttribute('aria-invalid', 'true');
+    els.hostError.textContent = message;
+    els.hostError.hidden = false;
+  } else {
+    els.host.removeAttribute('aria-invalid');
+    els.hostError.textContent = '';
+    els.hostError.hidden = true;
+  }
+  return message;
 }
 
 // Common case: no custom rules and every advanced option at its default. Served from the
@@ -101,18 +130,34 @@ function setMode(m) {
   els.oMode.className = white ? 'green' : 'indigo';
   els.oSize.textContent = sizeLabel();
   els.modeNote.textContent = MODE_NOTE[mode];
+  clearTimeout(updateTimer);
+  clearBlob();
+  setReady(false);
   update();
 }
 
-const scheduleUpdate = () => { clearTimeout(updateTimer); updateTimer = setTimeout(update, 150); };
+const scheduleUpdate = () => {
+  clearTimeout(updateTimer);
+  updateSeq += 1;
+  clearBlob();
+  setReady(false);
+  const { form, host } = readValidatedForm();
+  const hostError = renderHostValidation(host);
+  els.notReady.textContent = hostError || (host.valid && form.token ? '正在生成配置…' : '填入域名和令牌后即可生成');
+  renderQR(form, host);
+  renderSource();
+  updateTimer = setTimeout(update, 150);
+};
 
 async function update() {
   const seq = ++updateSeq;
-  const f = readForm();
+  const { form: f, host } = readValidatedForm();
   const white = mode === 'whitelist';
-  const ready = !!f.relayHost && !!f.token;
-  els.notReady.textContent = '填入域名和令牌后即可生成';
-  setReady(ready);
+  const ready = host.valid && !!f.token;
+  const hostError = renderHostValidation(host);
+  els.notReady.textContent = hostError || (ready ? '正在生成配置…' : '填入域名和令牌后即可生成');
+  setReady(false);
+  renderQR(f, host);
 
   try {
     if (isDefaultOpts(f)) {
@@ -125,6 +170,7 @@ async function update() {
         const tmpl = await loadPreset(mode);
         if (seq !== updateSeq) return;
         setBlob(tmpl.split('__RELAY_HOST__').join(escXml(f.relayHost)).split('__RELAY_TOKEN__').join(escXml(f.token)));
+        setReady(true);
       } else {
         clearBlob();
       }
@@ -142,6 +188,7 @@ async function update() {
           relayHost: f.relayHost, token: f.token, mode, match, excluded,
           http3: f.http3, uiToggle: f.uiToggle, dns: f.dns,
         }));
+        setReady(true);
       } else {
         clearBlob();
       }
@@ -151,19 +198,21 @@ async function update() {
     els.notReady.textContent = '生成失败：' + (e.message || e);
     setReady(false); // a failed build reverts to the disabled state rather than inert buttons
   }
-  renderQR(f);
   renderSource();
 }
 
-function renderQR(f) {
+function renderQR(f, host) {
   const params = new URLSearchParams({ mode: mode === 'whitelist' ? 'white' : 'black' });
-  if (f.relayHost) params.set('host', f.relayHost);
+  if (host.valid) params.set('host', host.value);
+  if (f.token) params.set('token', f.token);
   if (f.http3) params.set('http3', '1');
   if (f.dns) params.set('doh', f.dns.dohURL);
+  if (!f.uiToggle) params.set('toggle', '0');
   // Keep relay details in the fragment: unlike query parameters, fragments are never
   // included in the HTTP request, server logs, or the Referer header.
-  const url = location.origin + location.pathname + '#' + params.toString();
-  els.qrUrl.textContent = url;
+  const baseURL = location.origin + location.pathname;
+  const url = baseURL + '#' + params.toString();
+  els.qrUrl.textContent = f.token ? baseURL + '#…（令牌已隐藏）' : url;
   els.qrUrl.href = url;
   if (window.qrcode) {
     try {
@@ -180,16 +229,35 @@ function renderQR(f) {
 function prefill() {
   const q = new URLSearchParams(location.hash.replace(/^#/, ''));
   if (q.get('host')) els.host.value = q.get('host');
+  if (q.has('token')) els.token.value = q.get('token');
   if (q.get('doh')) els.doh.value = q.get('doh');
   if (q.get('http3') === '1') els.http3.checked = true;
-  return q.get('mode') === 'white' ? 'whitelist' : 'blacklist';
+  if (q.get('toggle') === '0') els.uiToggle.checked = false;
+  const initialMode = q.get('mode') === 'white' ? 'whitelist' : 'blacklist';
+  if (q.has('token')) {
+    q.delete('token');
+    const safeHash = q.toString();
+    history.replaceState(null, '', location.pathname + location.search + (safeHash ? '#' + safeHash : ''));
+  }
+  return initialMode;
 }
 
-els.installBtn.addEventListener('click', () => { if (blobUrl) window.location.href = blobUrl; });
+function hasCurrentProfile() {
+  const { form, host } = readValidatedForm();
+  return !!blobUrl && host.valid && !!form.token;
+}
+
+els.installBtn.addEventListener('click', () => { if (hasCurrentProfile()) window.location.href = blobUrl; });
+els.dlLink.addEventListener('click', (event) => {
+  if (!hasCurrentProfile()) {
+    event.preventDefault();
+    scheduleUpdate();
+  }
+});
 els.modeBlack.addEventListener('click', () => setMode('blacklist'));
 els.modeWhite.addEventListener('click', () => setMode('whitelist'));
 for (const el of [els.host, els.token, els.include, els.exclude, els.doh]) el.addEventListener('input', scheduleUpdate);
-for (const el of [els.http3, els.uiToggle]) el.addEventListener('change', update);
+for (const el of [els.http3, els.uiToggle]) el.addEventListener('change', scheduleUpdate);
 els.sourceDetails.addEventListener('toggle', renderSource);
 
 setMode(prefill());

@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark">
   <meta name="referrer" content="no-referrer">
   <title>生成 iOS 配置 — 5GPN Relay</title>
-  <meta name="description" content="在浏览器里本地生成 Apple Network Relay 描述文件，选模式、加自定义规则，直接唤起安装。令牌只留在本机。">
+  <meta name="description" content="在浏览器里本地生成 Apple Network Relay 描述文件，选模式、加自定义规则，直接唤起安装。敏感数据不上传服务器。">
   <meta id="themeColor" name="theme-color" content="#fbfbfd">
   <link rel="canonical" href="https://5gpn.de/generate.html">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -54,7 +54,7 @@
 
   <main class="generator-main" id="generator" tabindex="-1">
     <div class="generator-intro">
-      <p class="eyebrow">生成器 · 本地生成，令牌不离开这台设备</p>
+      <p class="eyebrow">生成器 · 本地生成，敏感数据不上传服务器</p>
       <h1>生成你的 iOS 配置</h1>
       <p class="generator-lede">填入中继域名和令牌，选一种分流模式，需要时加自定义规则。描述文件完全在你的浏览器里生成——不上传、不进仓库。</p>
     </div>
@@ -63,14 +63,15 @@
       <div class="generator-form" id="genForm">
         <div>
           <label class="field-label" for="host">中继域名</label>
-          <input class="form-input" id="host" name="host" type="text" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="relay.example.com">
-          <p class="field-hint">你的 KFCHost 主机域名，经专线可达。写入配置的 <code class="code-chip">HTTP2RelayURL</code>。</p>
+          <input class="form-input" id="host" name="host" type="text" inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="relay.example.com" required maxlength="253" aria-describedby="hostHint hostError">
+          <p class="field-hint" id="hostHint">只填写纯域名，例如 <code class="code-chip">relay.example.com</code>；不要包含 <code class="code-chip">https://</code>、端口或路径。</p>
+          <p class="field-error" id="hostError" role="alert" hidden></p>
         </div>
 
         <div>
           <label class="field-label" for="token">令牌 Token</label>
           <input class="form-input mono" id="token" name="token" type="password" autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="relayctl 输出的 X-Relay-Token">
-          <p class="field-hint field-hint-private"><span class="privacy-dot" aria-hidden="true">●</span>令牌只留在本机，不会写进二维码或链接。</p>
+          <p class="field-hint field-hint-private"><span class="privacy-dot" aria-hidden="true">●</span>令牌不会上传服务器；扫码链接会包含令牌，请勿截图或分享二维码。</p>
         </div>
 
         <fieldset class="generator-fieldset">
@@ -119,7 +120,10 @@
               <p class="field-hint">附带一个 DNS 描述文件，让解析更稳定并正确触发中继。</p>
             </div>
             <label class="check-row"><input id="http3" type="checkbox">同时启用 HTTP/3（QUIC）中继地址</label>
-            <label class="check-row"><input id="uiToggle" type="checkbox" checked>允许在「设置」里手动开关中继</label>
+            <div class="advanced-option">
+              <label class="check-row"><input id="uiToggle" type="checkbox" checked>允许用户在系统设置中停用中继（iOS / iPadOS 26+）</label>
+              <p class="field-hint">配置详情页仅用于查看。安装后返回「设置 › 通用 › VPN 与设备管理」，从「网络中继」入口开关；较旧系统不会显示该入口。</p>
+            </div>
           </div>
         </details>
       </div>
@@ -141,7 +145,7 @@
 
         <div class="generator-qr">
           <div class="qr-box" id="qrBox">QR</div>
-          <p class="qr-hint">用另一台手机扫码，在手机上打开这个生成器<br>（不含令牌）</p>
+          <p class="qr-hint">扫码后自动填入域名和令牌并生成配置<br><strong>二维码包含令牌，请勿分享</strong></p>
           <a class="qr-url" id="qrUrl" href="#">generate.html</a>
         </div>
       </aside>

@@ -1764,6 +1764,11 @@ main {
   box-shadow: 0 0 0 4px var(--accentGlow);
 }
 
+.form-input[aria-invalid="true"] {
+  border-color: #d70015;
+  box-shadow: 0 0 0 4px rgba(215, 0, 21, .12);
+}
+
 .form-textarea-direct:focus {
   border-color: var(--green);
   box-shadow: 0 0 0 4px rgba(52, 199, 89, .14);
@@ -1781,10 +1786,21 @@ main {
   line-height: 1.5;
 }
 
+.field-error {
+  margin: 7px 0 0;
+  color: #d70015;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
 .field-hint-private {
   display: flex;
   align-items: flex-start;
   gap: 6px;
+}
+
+.advanced-option .field-hint {
+  margin-left: 30px;
 }
 
 .privacy-dot {

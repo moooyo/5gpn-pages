@@ -17,7 +17,7 @@ automatic/light/dark theme. Served by GitHub Pages at
 ├── relay.html      # Apple Relay marketing page
 ├── generate.html   # local .mobileconfig generator
 ├── styles.css      # Apple-style tokens, components, themes, responsive states
-├── main.js         # automatic/light/dark theme + copy command behavior
+├── main.js         # theme, copy commands, and seamless solution switching
 ├── favicon.svg     # indigo brand shield
 ├── assets/
 │   ├── console-dashboard.png   # Web console screenshot (Console section)

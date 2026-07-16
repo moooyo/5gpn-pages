@@ -319,6 +319,10 @@ a:hover {
   view-transition-name: solution-switcher;
 }
 
+.nav-segment-current {
+  view-transition-name: solution-active-pill;
+}
+
 .nav-links {
   view-transition-name: nav-actions;
 }
@@ -330,8 +334,26 @@ main {
 ::view-transition-group(site-brand),
 ::view-transition-group(solution-switcher),
 ::view-transition-group(nav-actions) {
-  animation-duration: .24s;
+  animation-duration: .3s;
   animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+
+::view-transition-group(solution-active-pill) {
+  animation-duration: .42s;
+  animation-timing-function: cubic-bezier(.16, 1, .3, 1);
+}
+
+::view-transition-old(solution-active-pill) {
+  animation: solution-pill-out .14s ease both;
+}
+
+::view-transition-new(solution-active-pill) {
+  animation: solution-pill-in .24s .08s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+::view-transition-old(page-main),
+::view-transition-new(page-main) {
+  transform-origin: 50% 0;
 }
 
 ::view-transition-old(page-main) {
@@ -340,6 +362,62 @@ main {
 
 ::view-transition-new(page-main) {
   animation: page-fade-in .24s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+:root[data-solution-direction="forward"]::view-transition-old(page-main) {
+  animation: solution-page-out-forward .18s ease both;
+}
+
+:root[data-solution-direction="forward"]::view-transition-new(page-main) {
+  animation: solution-page-in-forward .34s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+:root[data-solution-direction="back"]::view-transition-old(page-main) {
+  animation: solution-page-out-back .18s ease both;
+}
+
+:root[data-solution-direction="back"]::view-transition-new(page-main) {
+  animation: solution-page-in-back .34s cubic-bezier(.16, 1, .3, 1) both;
+}
+
+@keyframes solution-pill-out {
+  to {
+    opacity: .28;
+  }
+}
+
+@keyframes solution-pill-in {
+  from {
+    opacity: .28;
+  }
+}
+
+@keyframes solution-page-out-forward {
+  to {
+    opacity: 0;
+    transform: translate3d(-18px, 0, 0) scale(.994);
+  }
+}
+
+@keyframes solution-page-in-forward {
+  from {
+    opacity: 0;
+    transform: translate3d(28px, 0, 0) scale(.994);
+  }
+}
+
+@keyframes solution-page-out-back {
+  to {
+    opacity: 0;
+    transform: translate3d(18px, 0, 0) scale(.994);
+  }
+}
+
+@keyframes solution-page-in-back {
+  from {
+    opacity: 0;
+    transform: translate3d(-28px, 0, 0) scale(.994);
+  }
 }
 
 @keyframes page-fade-out {

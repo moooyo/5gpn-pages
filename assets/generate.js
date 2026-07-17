@@ -42,7 +42,7 @@ async function loadMeta() { if (!meta) meta = await fetchJSON('./lists/meta.json
 
 const linesOf = (el) => el.value.split(/[\s,]+/).map((s) => s.trim()).filter(Boolean);
 const fmtCount = (n) => n.toLocaleString('en-US').replace(/,/g, ' ');
-const sizeLabel = () => mode === 'whitelist' ? '≈3.8 MB' : '≈150 KB';
+const sizeLabel = () => mode === 'whitelist' ? '≈350 KB' : '≈150 KB';
 // Escape XML metacharacters the same way lib/plist.mjs does, so the fast-path preset
 // substitution produces well-formed XML for hosts/tokens that contain & < > (the custom
 // path already escapes via toPlist).
@@ -110,7 +110,7 @@ function setReady(ready) {
   els.notReady.hidden = ready;
 }
 
-// The source <pre> is only populated while the <details> is open, so the 3.8 MB whitelist
+// The source <pre> is only populated while the <details> is open, so the whitelist
 // XML never blocks first paint.
 function renderSource() {
   if (!els.sourceDetails.open) return;

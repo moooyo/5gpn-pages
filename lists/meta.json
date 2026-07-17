@@ -1,7 +1,7 @@
 {
-  "generated": "2026-07-15T20:12:15.955Z",
+  "generated": "2026-07-17T09:31:53.827Z",
   "counts": {
-    "direct": 111645,
+    "direct": 10405,
     "relay": 4254
   },
   "sources": {
@@ -10,6 +10,7 @@
       "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf",
       "https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf"
     ],
-    "relay": "https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt"
+    "relay": "https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt",
+    "directPopularityFilter": "https://tranco-list.eu/top-1m.csv.zip"
   }
 }

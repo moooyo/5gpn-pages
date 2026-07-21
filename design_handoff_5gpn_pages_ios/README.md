@@ -170,7 +170,7 @@
 纯静态站，仅需：主题（localStorage + `data-theme` 属性）、复制按钮短暂态。无数据请求。
 
 ## Assets
-- `assets/console-dashboard.png` — 控制台截图，来自 5gpn-pages 仓库原资源（截图仍是旧版蓝色 UI，**建议后续替换为新版控制台截图**）
+- `assets/console-dashboard.png` — Current 1440×900 5gpn 0.0.14 Console overview capture, rendered with local fixture data.
 - 图标为内联 SVG 线性图标（源自旧站，19px、stroke 2、round cap/join），无外部图标库
 - 无外部字体（系统字体栈），无 emoji
 

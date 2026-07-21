@@ -20,7 +20,7 @@ automatic/light/dark theme. Served by GitHub Pages at
 ├── main.js         # theme, copy commands, and seamless solution switching
 ├── favicon.svg     # indigo brand shield
 ├── assets/
-│   ├── console-dashboard.png   # Web console screenshot (Console section)
+│   ├── console-dashboard.png   # 5gpn 0.0.14 Web Console screenshot
 │   ├── og-cover.png            # 1200×630 @2x social preview (og:image)
 │   ├── generate.js             # browser-only Relay profile generation
 │   └── qrcode.js               # local QR renderer
@@ -96,8 +96,9 @@ an hour).
   saved forced theme before first paint; all three pages share the same state.
 - **Relay generator data** — refresh `lists/` and `presets/` from the
   5gpn-relay list build when its curated domain data changes.
-- **Console screenshot** — replace `assets/console-dashboard.png` with a current
-  screenshot of the live console.
+- **Console screenshot** — `assets/console-dashboard.png` is a 1440×900 capture
+  of the 5gpn 0.0.14 Console overview rendered with local fixture data. Keep the
+  intrinsic dimensions in `index.html` synchronized when replacing it.
 - **Social preview** — `assets/og-cover.png` is referenced by the Open Graph /
   Twitter meta tags in `index.html`.
 

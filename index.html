@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <title>5GPN — 解析即策略</title>
-  <meta name="description" content="5GPN —— 直出型智能分流 DNS / SNI 网关。一次解析决定每条流量直连还是走网关；远端经 mihomo 透明转发。客户端只需一个 DoT 域名，无需安装任何 App。开源 · MIT · 一个 Go 二进制。">
+  <meta name="description" content="5GPN —— 自托管的 DoT 智能分流 DNS / SNI 网关。统一控制台覆盖实时状态、解析诊断、有序策略、mihomo 与原生插件市场；预编译部署，无需客户端 App。开源 · MIT。">
   <meta id="themeColor" name="theme-color" content="#fbfbfd">
   <link rel="canonical" href="https://5gpn.de/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -74,7 +74,7 @@
   <main id="top">
     <div id="content" tabindex="-1">
       <section class="hero" aria-labelledby="hero-title">
-        <p class="eyebrow">开源 · MIT · 一个 Go 二进制</p>
+        <p class="eyebrow">开源 · MIT · DNS 与控制面同进程</p>
         <h1 id="hero-title">解析即<span>策略</span>。</h1>
         <p class="hero-lede">
           直出型智能分流 DNS / SNI 网关。一次解析决定每条流量<strong>直连</strong>还是<strong>走网关</strong>——客户端只需填一个 DoT 域名，无需安装任何 App。
@@ -90,16 +90,16 @@
         <ul class="hero-chips">
           <li class="hero-chip"><span class="chip-dot chip-dot-green" aria-hidden="true"></span>无需客户端 App</li>
           <li class="hero-chip"><span class="chip-dot chip-dot-accent" aria-hidden="true"></span>DoT-only 接入</li>
-          <li class="hero-chip"><span class="chip-dot chip-dot-accent" aria-hidden="true"></span>一个进程 · 一个配置文件</li>
-          <li class="hero-chip"><span class="chip-dot chip-dot-orange" aria-hidden="true"></span>直出 · 无隧道</li>
+          <li class="hero-chip"><span class="chip-dot chip-dot-accent" aria-hidden="true"></span>统一控制台 · Telegram</li>
+          <li class="hero-chip"><span class="chip-dot chip-dot-orange" aria-hidden="true"></span>可选隔离插件 sidecar</li>
         </ul>
       </section>
 
-      <section class="schematic-section" aria-label="分流示意图：一次 DNS 解析决定流量直连，或经 mihomo 出站">
+      <section class="schematic-section" aria-label="分流示意图：未拦截的 DNS 查询返回真实 IP 或网关 IP">
         <div class="schematic-card">
           <svg class="schematic" viewBox="0 0 820 320" width="100%" role="img" aria-labelledby="schematic-title schematic-desc" data-animated-diagram>
             <title id="schematic-title">5GPN DNS 与 SNI 分流链路</title>
-            <desc id="schematic-desc">任意设备通过 DoT 接入 5gpn-dns。直连目标返回真实 IP，其余流量经 mihomo 与可选出口访问互联网。</desc>
+            <desc id="schematic-desc">支持 DoT 且 IPv4 可达的设备接入 5gpn-dns。block 返回 NXDOMAIN；其余查询返回真实 IP 或网关 IP，网关流量再由 mihomo 承载。</desc>
 
             <path class="route route-neutral" d="M122,172 L170,172"></path>
             <path class="route route-direct" d="M280,172 C 360,172 380,82 470,82"></path>
@@ -108,7 +108,7 @@
             <path class="route route-proxy" d="M650,261 L700,261"></path>
 
             <rect class="diagram-node" x="30" y="130" width="92" height="84" rx="14"></rect>
-            <text class="diagram-title" x="76" y="167" text-anchor="middle">任意设备</text>
+            <text class="diagram-title" x="76" y="167" text-anchor="middle">IPv4 设备</text>
             <text class="diagram-caption" x="76" y="187" text-anchor="middle">无需 App</text>
 
             <rect class="diagram-node diagram-node-accent" x="170" y="140" width="110" height="64" rx="14"></rect>
@@ -126,8 +126,8 @@
             <text class="diagram-egress-label diagram-mono" x="490" y="251" text-anchor="middle">出站</text>
 
             <rect class="diagram-node" x="520" y="230" width="130" height="62" rx="14"></rect>
-            <text class="diagram-title diagram-title-compact" x="585" y="258" text-anchor="middle">多出口</text>
-            <text class="diagram-caption diagram-caption-small" x="585" y="277" text-anchor="middle">selector 切换</text>
+            <text class="diagram-title diagram-title-compact" x="585" y="258" text-anchor="middle">运营者出站</text>
+            <text class="diagram-caption diagram-caption-small" x="585" y="277" text-anchor="middle">mihomo 配置</text>
 
             <rect class="diagram-node" x="700" y="225" width="92" height="72" rx="14"></rect>
             <text class="diagram-title diagram-title-compact" x="746" y="256" text-anchor="middle">世界</text>
@@ -157,7 +157,7 @@
           <div class="section-heading">
             <p class="eyebrow">安装 · 网关侧</p>
             <h2 id="install-title">一行命令，装好网关</h2>
-            <p class="section-sub section-sub-small">在一台 root 权限的 Linux 网关上执行。交互式问答（WebUI 域名 / DoT 域名 / 网关 IP），自动签发证书、拉起 systemd 服务。</p>
+            <p class="section-sub section-sub-small">在一台 root 权限的 Linux 网关上执行。交互式问答收集证书模式、基础域名与证书邮箱（Cloudflare 模式另需 token），公网与网关 IP 默认自动确定。</p>
           </div>
           <div class="terminal">
             <div class="terminal-bar">
@@ -173,7 +173,7 @@
               </button>
             </div>
           </div>
-          <p class="install-note">也可在 checkout 内运行 <code class="code-chip code-chip-accent">sudo bash install.sh</code>，支持环境变量预置与内网部署。</p>
+          <p class="install-note">也可在 checkout 内运行 <code class="code-chip code-chip-accent">sudo bash install.sh</code>；默认使用稳定频道，更新时保留已校验的运维配置并在失败时自动回滚。</p>
         </div>
       </section>
 
@@ -182,7 +182,7 @@
           <div class="section-heading section-heading-large">
             <p class="eyebrow">原理 · 一次解析的旅程</p>
             <h2 id="how-title">不是隧道，<br>是一次 DNS 解析决定去向</h2>
-            <p class="section-sub">三类规则自上而下匹配。远端域名被解析成网关自己的 IP，自然漏斗进 mihomo 透明转发；直连域名返回真实 IP，网关不经手。</p>
+            <p class="section-sub">有序策略按 block / direct / proxy 首条命中，未命中时交给 fallback。网关目标解析成网关 IP 并进入 mihomo；直连目标返回真实 IP。</p>
           </div>
           <div class="journey-grid">
             <article class="journey-card">
@@ -193,7 +193,7 @@
             <article class="journey-card">
               <span class="journey-number">02</span>
               <h3>判定</h3>
-              <p>force-direct / blacklist 优先命中；其余并发查询本地 UDP 与可信 DoT，按 chnroute 仲裁。</p>
+              <p>有序策略按 block / direct / proxy 首条命中；未命中时由 auto / direct / gateway fallback 接管。</p>
             </article>
             <article class="journey-card">
               <span class="journey-number journey-number-green">03</span>
@@ -203,46 +203,44 @@
             <article class="journey-card">
               <span class="journey-number">04</span>
               <h3>出站</h3>
-              <p>判定远端的域名解析成网关 IP，流量漏斗进 mihomo，透明转发直出。</p>
+              <p>auto fallback 并发查询境内组与可信组，按 chnroute 仲裁；网关目标再由 mihomo 承载。</p>
             </article>
           </div>
-          <p class="mono-note">chnroute 仲裁按答案 IP 归属判定、而非谁先应答——确定性正是当初自研的原因</p>
+          <p class="mono-note">策略跨 intent 全局有序 · chnroute 按答案 IP 归属判定，而非谁先应答</p>
         </div>
       </section>
 
       <section class="section" id="modes" aria-labelledby="modes-title">
         <div class="section-inner">
           <div class="section-heading">
-            <p class="eyebrow">去向 · 出口全在应用层</p>
-            <h2 id="modes-title">两种去向，多个出口</h2>
+            <p class="eyebrow">去向 · DNS 判定，mihomo 承载</p>
+            <h2 id="modes-title">放行流量，两种去向</h2>
           </div>
           <div class="mode-grid">
             <article class="mode-card mode-card-direct">
               <span class="mode-tag mode-tag-direct">直连 · DIRECT</span>
               <h3>真实 IP，本地直出</h3>
-              <p>命中 force-direct 或仲裁判定国内的域名，返回真实 IP——客户端直连，网关完全不经手。</p>
+              <p>命中 direct 策略或 auto fallback 判定境内的域名，返回真实 IP——客户端直连，网关完全不经手。</p>
               <ul class="mode-list">
                 <li><span class="bullet bullet-green" aria-hidden="true">·</span>零额外时延，本地流量零开销</li>
-                <li><span class="bullet bullet-green" aria-hidden="true">·</span>force-direct 名单随手可加，内网域名精确直连</li>
+                <li><span class="bullet bullet-green" aria-hidden="true">·</span>有序策略可按域名、关键词或订阅精确直连</li>
               </ul>
             </article>
             <article class="mode-card mode-card-proxy">
               <span class="mode-tag mode-tag-proxy">远端 · 经 MIHOMO</span>
               <h3>解析成网关 IP，透明转发</h3>
-              <p>远端域名自然漏斗进 mihomo，出站层 selector 切换出口——控制台 / Telegram 一键生效。</p>
+              <p>网关目标自然漏斗进 mihomo；节点、分组、规则与传输始终由运营者自己的完整 mihomo 配置拥有。</p>
               <ul class="exit-pills">
-                <li class="exit-pill exit-pill-selected">✓ 直出</li>
-                <li class="exit-pill">香港</li>
-                <li class="exit-pill">日本</li>
-                <li class="exit-pill">美国</li>
-                <li class="exit-pill">新加坡</li>
+                <li class="exit-pill exit-pill-selected">DNS → GATEWAY</li>
+                <li class="exit-pill">mihomo rules</li>
+                <li class="exit-pill">operator egress</li>
               </ul>
               <ul class="mode-list">
-                <li><span class="bullet bullet-accent" aria-hidden="true">·</span>无内核路由与策略路由，切换无需重启</li>
+                <li><span class="bullet bullet-accent" aria-hidden="true">·</span>控制台可编辑完整配置，经 <code class="code-chip">mihomo -t</code> 校验后原子写盘并请求热应用</li>
               </ul>
             </article>
           </div>
-          <p class="mono-note">SNI 回源解析器可配置 · 出口列表随 mihomo 出站配置生效</p>
+          <p class="mono-note">DNS 策略不选择节点或分组 · 插件需要的出口也必须由运营者显式绑定</p>
         </div>
       </section>
 
@@ -251,7 +249,7 @@
           <div class="section-heading">
             <p class="eyebrow">特性</p>
             <h2 id="features-title">简单，且确定</h2>
-            <p class="section-sub">零 Python、极小依赖，一切行为可预期。</p>
+            <p class="section-sub">核心服务无 Python、预编译交付、边界显式，一切行为可预期。</p>
           </div>
           <div class="feature-grid">
             <article class="feature-card">
@@ -259,7 +257,7 @@
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="4"></circle><path d="M12 3v3M12 18v3M3 12h3M18 12h3"></path></svg>
               </span>
               <h3>确定性 chnroute 仲裁</h3>
-              <p>并发查询本地 UDP 与可信 DoT，按答案 IP 归属判定直连或直出，不是竞速——这是 smartdns 做不到、当初自研的根本原因。</p>
+              <p>并发查询境内组与可信组，按答案 IP 归属判定直连或走网关，不是抢答竞速。</p>
             </article>
             <article class="feature-card">
               <span class="feature-icon" aria-hidden="true">
@@ -272,29 +270,29 @@
               <span class="feature-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4"></path><path d="M21 3v5h-5"></path></svg>
               </span>
-              <h3>规则订阅</h3>
-              <p>进程内按各自 interval 定时拉取远程列表，支持 gfwlist / dnsmasq / hosts / cidr 等格式；拉取失败保留旧缓存，离线安全。</p>
+              <h3>有序统一策略</h3>
+              <p>block / direct / proxy 跨类型按顺序首条命中；订阅按各自 interval 更新，失败继续使用上次有效快照。</p>
             </article>
             <article class="feature-card">
               <span class="feature-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.5"></rect><path d="M4 10h16M10 10v10"></path></svg>
               </span>
               <h3>统一控制面</h3>
-              <p>Web 控制台、REST API、iOS 描述文件、Telegram bot 共用同一进程内 Controller，浏览器即达。</p>
+              <p>Web Console、REST API 与 Telegram bot 共用同一进程内 Controller 和领域管理器；同一服务还分发 iOS 描述文件。</p>
             </article>
             <article class="feature-card">
               <span class="feature-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M12 2.5 20 5.5V11c0 5.5-3.3 9.4-8 11-4.7-1.6-8-5.5-8-11V5.5Z"></path></svg>
               </span>
-              <h3>fail2ban 式防护</h3>
-              <p>登录失败超阈值自动封锁来源 IP；控制台令牌可用 <code class="code-chip">5gpn --rotate-token</code> 一键轮换。</p>
+              <h3>原生插件与市场</h3>
+              <p>严格 <code class="code-chip">5gpn.io/v1</code>、不可变快照与最小权限；导入和更新后默认禁用，审查后再显式启用。</p>
             </article>
             <article class="feature-card">
               <span class="feature-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="M6 3v6a6 6 0 0 0 12 0V3M12 15v6M8 21h8"></path></svg>
               </span>
-              <h3>零依赖 · 运维友好</h3>
-              <p>Go 侧仅两个依赖，网关上不放工具链、从不现场编译；systemd 硬化沙箱、统计持久化存活重启、证书续期无需重启服务。</p>
+              <h3>预编译 · 运维友好</h3>
+              <p>网关不放编译工具链；发布产物固定版本并强制校验 SHA-256，systemd 硬化、状态原子持久化、生产证书按角色自动续期。</p>
             </article>
           </div>
         </div>
@@ -321,7 +319,7 @@
             <article class="setup-card">
               <span class="step-badge">3</span>
               <h3>完成</h3>
-              <p>本地直连、远端出站自动生效。规则订阅在进程内定时更新，拉取失败保留旧缓存，离线安全。</p>
+              <p>本地直连、网关出站按有序策略生效。订阅在进程内定时更新，拉取失败保留上次有效快照。</p>
             </article>
           </div>
         </div>
@@ -330,14 +328,16 @@
       <section class="section section-surface" id="console" aria-labelledby="console-title">
         <div class="split-layout">
           <div class="split-copy">
-            <p class="eyebrow">控制台 · 装完即有</p>
-            <h2 id="console-title">统一控制面，<br>浏览器即达</h2>
-            <p>Web 控制台、REST API、iOS 描述文件分发与 Telegram bot 跑在同一进程里，共用同一个 Controller——浏览器访问 <code class="code-chip code-chip-bordered">https://&lt;域名&gt;</code> 即达。</p>
+            <p class="eyebrow">控制台 · 0.0.14</p>
+            <h2 id="console-title">浏览器完整管理，<br>私聊处理日常运维</h2>
+            <p>Web Console 通过 REST API 与 Telegram bot 共用同一进程内 Controller 和领域管理器；同一服务还分发 iOS 描述文件。浏览器访问 <code class="code-chip code-chip-bordered">https://console.&lt;域名&gt;/</code> 即达。</p>
             <ul class="check-list">
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>Dashboard：verdict 分布与上游健康，实时可见</span></li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>规则与订阅：三类规则增删、订阅立即更新</span></li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>Lookup：输入域名，模拟完整解析决策路径</span></li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>Telegram bot：inline 菜单管理，热切换无需重启</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>仪表盘：QPS、决策分布、上游健康与延迟近实时可见</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>接入与解析：设备向导、解析日志、诊断测试</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>策略规则：有序 block / direct / proxy 与 fallback</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>插件与市场：审查快照、权限和接管域名，再配置、排序、更新与启停</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>mihomo：控制台查看健康与实时日志、编辑完整配置</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>Telegram：状态、诊断、近期日志与受控运维；破坏性操作和插件写入需确认</span></li>
             </ul>
           </div>
           <div class="browser-mock">
@@ -347,11 +347,67 @@
               <span class="browser-light terminal-light-green" aria-hidden="true"></span>
               <span class="browser-url">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
-                5gpn.example.com
+                console.5gpn.example.com
               </span>
             </div>
-            <img src="assets/console-dashboard.png" alt="5GPN Web 控制台仪表盘" width="924" height="540" loading="lazy" decoding="async">
+            <img src="assets/console-dashboard.png" alt="5GPN 0.0.14 Web 控制台仪表盘，侧栏包含插件模块与插件市场" width="1440" height="900" loading="lazy" decoding="async">
           </div>
+        </div>
+      </section>
+
+      <section class="section" id="extensions" aria-labelledby="extensions-title">
+        <div class="extension-layout">
+          <div class="extension-copy">
+            <p class="eyebrow">原生插件 · 明确授权</p>
+            <h2 id="extensions-title">市场用于发现，<br>启用始于审查</h2>
+            <p>插件可按精确域名或受限子域通配符和请求阶段改写 HTTP / HTTPS 流量，但不能绕过边界。从 URL 或市场安装时，网关会重新抓取并核验 manifest 与脚本；本地导入也经过同一严格解析与快照流程，且默认禁用。</p>
+            <ul class="extension-capabilities">
+              <li><strong>请求与响应变换</strong><span>按 host、path、method、status 与 phase 精确匹配，只处理插件声明的流量。</span></li>
+              <li><strong>类型化设置</strong><span>支持 text、select、boolean、number 与 location；未填完必需项不能启用。</span></li>
+              <li><strong>最小网络权限</strong><span>仅开放已声明并确认的精确 origin；无文件系统、进程、原始 socket 或环境级 fetch。</span></li>
+            </ul>
+            <p class="extension-catalog">首批 8 个第一方扩展覆盖广告平台端点与 HTTPDNS 拦截、Apple WLOC 定位、Bilibili / Reddit / Spotify / YouTube 响应净化，以及 TestFlight storefront 改写。</p>
+            <div class="extension-links">
+              <a href="https://github.com/moooyo/5gpn-extensions" target="_blank" rel="noopener noreferrer">浏览第一方插件 <span aria-hidden="true">↗</span></a>
+              <a href="https://github.com/moooyo/5gpn/blob/main/docs/native-extensions.md" target="_blank" rel="noopener noreferrer">阅读原生插件规范 <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+
+          <aside class="extension-receipt" aria-label="插件从发现到启用的安全流程">
+            <div class="receipt-header">
+              <span class="receipt-kicker">5gpn.io/v1 · immutable snapshot</span>
+              <span class="receipt-state"><span aria-hidden="true"></span>默认禁用</span>
+            </div>
+            <div class="receipt-digest">
+              <div>
+                <span>snapshot digest</span>
+                <code>SHA-256 · canonical snapshot</code>
+              </div>
+              <strong>本机核验</strong>
+            </div>
+            <ol class="extension-gates" role="list">
+              <li>
+                <span class="gate-number" aria-hidden="true">01</span>
+                <div><strong>发现</strong><p>显式添加官方或自管市场 URL；浏览与刷新不会安装、更新或启用任何插件。</p></div>
+                <span class="gate-state">不改插件</span>
+              </li>
+              <li>
+                <span class="gate-number" aria-hidden="true">02</span>
+                <div><strong>审查</strong><p>逐项核对接管域名、动作、脚本摘要、设置、网络 origin、存储与出口绑定。</p></div>
+                <span class="gate-state">确认</span>
+              </li>
+              <li>
+                <span class="gate-number" aria-hidden="true">03</span>
+                <div><strong>启用</strong><p>单独确认插件与 MITM 总开关；涉及 HTTPS 时，设备还需显式信任 CA。发布失败会恢复旧状态。</p></div>
+                <span class="gate-state gate-state-ready">显式</span>
+              </li>
+            </ol>
+            <div class="receipt-footer">
+              <span>fresh VM per action</span>
+              <span>script error → fail closed</span>
+              <span>all upstream via mihomo</span>
+            </div>
+          </aside>
         </div>
       </section>
 
@@ -360,7 +416,7 @@
           <div class="split-copy">
             <p class="eyebrow">CLI · 一个命令</p>
             <h2 id="cli-title">一个 <span class="mono-accent">5gpn</span> 命令<br>管理一切</h2>
-            <p>安装完成后，终端输入 <code class="code-chip">5gpn</code> 打开交互管理菜单，或带子命令直接执行。配置只有一个文件 <code class="code-chip">/etc/5gpn/dns.env</code>；重跑安装脚本即得全新产物，旧配置错位不可能残留。</p>
+            <p>安装完成后，以 root 权限运行 <code class="code-chip">5gpn</code> 打开交互管理菜单，或带子命令直接执行。安装参数主要集中在 <code class="code-chip">/etc/5gpn/dns.env</code>，Cloudflare 凭据单独保存；策略、订阅、插件与市场状态按领域原子持久化。</p>
           </div>
           <div class="terminal cli-terminal">
             <div class="terminal-bar">
@@ -370,12 +426,13 @@
               <span class="terminal-label">gateway ~ 5gpn</span>
             </div>
             <section class="cli-body" aria-label="5gpn 命令示例">
-              <div class="cli-row"><code><span>$ </span>5gpn</code><span># 打开交互管理菜单</span></div>
-              <div class="cli-row"><code><span>$ </span>5gpn --status</code><span># 服务 / 域名 / 列表状态</span></div>
-              <div class="cli-row"><code><span>$ </span>5gpn --add-domain d</code><span># 强制代理某域名</span></div>
-              <div class="cli-row"><code><span>$ </span>5gpn change-resolver r</code><span># 设置 SNI 回源解析器</span></div>
-              <div class="cli-row"><code><span>$ </span>5gpn --rotate-token</code><span># 轮换控制台令牌</span></div>
-              <div class="cli-row"><code><span>$ </span>5gpn --ios</code><span># 重新生成 iOS 描述文件 + 二维码</span></div>
+              <div class="cli-row"><code><span>$ </span>sudo 5gpn</code><span># 打开交互管理菜单</span></div>
+              <div class="cli-row"><code><span>$ </span>sudo 5gpn status</code><span># 服务 / 域名 / 列表状态</span></div>
+              <div class="cli-row"><code><span>$ </span>sudo 5gpn configure</code><span># 编辑安装与证书配置</span></div>
+              <div class="cli-row"><code><span>$ </span>sudo 5gpn reload-rules</code><span># 重载策略缓存与 chnroute</span></div>
+              <div class="cli-row"><code><span>$ </span>sudo 5gpn setup-tgbot</code><span># 校验并热应用 Telegram bot</span></div>
+              <div class="cli-row"><code><span>$ </span>sudo 5gpn rotate-token</code><span># 轮换控制台令牌</span></div>
+              <div class="cli-row"><code><span>$ </span>sudo 5gpn ios</code><span># 重新生成 iOS 描述文件 + 二维码</span></div>
             </section>
           </div>
         </div>
@@ -404,6 +461,7 @@
           <a href="#features">特性</a>
           <a href="#setup">接入</a>
           <a href="#console">控制台</a>
+          <a href="#extensions">插件</a>
         </nav>
       </div>
       <div>
@@ -413,12 +471,13 @@
           <a href="https://github.com/moooyo/5gpn#readme" target="_blank" rel="noopener noreferrer">文档</a>
           <a href="https://github.com/moooyo/5gpn/blob/main/tests/integration-smoke.md" target="_blank" rel="noopener noreferrer">行为验收</a>
           <a href="https://github.com/moooyo/5gpn/releases" target="_blank" rel="noopener noreferrer">Releases</a>
+          <a href="https://github.com/moooyo/5gpn-extensions" target="_blank" rel="noopener noreferrer">插件目录</a>
           <a href="https://kfchost.com/center/dashboard?aff=AFF112062USFL" target="_blank" rel="noopener noreferrer">KFCHost 官网</a>
         </nav>
       </div>
       <div>
         <h2>说明</h2>
-        <p>一个 Go 二进制 + 一个配置文件。开源 MIT，欢迎 issue 与 PR；与 5GPN Relay 共享同一设计语言。</p>
+        <p><code>5gpn-dns</code> 提供 DNS 与控制面，mihomo 承载数据面；可选 <code>5gpn-intercept</code> 仅在插件 MITM 开启时运行。开源 MIT，欢迎 issue 与 PR。</p>
       </div>
     </div>
   </footer>

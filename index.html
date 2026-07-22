@@ -285,7 +285,7 @@
                 <svg viewBox="0 0 24 24"><path d="M12 2.5 20 5.5V11c0 5.5-3.3 9.4-8 11-4.7-1.6-8-5.5-8-11V5.5Z"></path></svg>
               </span>
               <h3>原生插件与市场</h3>
-              <p>严格 <code class="code-chip">5gpn.io/v1</code>、不可变快照与最小权限；导入和更新后默认禁用，审查后再显式启用。</p>
+              <p>市场只负责发现；插件以严格 <code class="code-chip">5gpn.io/v1</code> 快照安装，接管域名及其解析器、路由规则与权限审查后再启用。</p>
             </article>
             <article class="feature-card">
               <span class="feature-icon" aria-hidden="true">
@@ -328,14 +328,14 @@
       <section class="section section-surface" id="console" aria-labelledby="console-title">
         <div class="split-layout">
           <div class="split-copy">
-            <p class="eyebrow">控制台 · 0.0.14</p>
+            <p class="eyebrow">控制台 · Web / Telegram</p>
             <h2 id="console-title">浏览器完整管理，<br>私聊处理日常运维</h2>
             <p>Web Console 通过 REST API 与 Telegram bot 共用同一进程内 Controller 和领域管理器；同一服务还分发 iOS 描述文件。浏览器访问 <code class="code-chip code-chip-bordered">https://console.&lt;域名&gt;/</code> 即达。</p>
             <ul class="check-list">
               <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>仪表盘：QPS、决策分布、上游健康与延迟近实时可见</span></li>
               <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>接入与解析：设备向导、解析日志、诊断测试</span></li>
               <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>策略规则：有序 block / direct / proxy 与 fallback</span></li>
-              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>插件与市场：审查快照、权限和接管域名，再配置、排序、更新与启停</span></li>
+              <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>插件与市场：连接来源、审查快照、接管域名解析器与逐条路由规则，再配置、排序、更新与启停</span></li>
               <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>mihomo：控制台查看健康与实时日志、编辑完整配置</span></li>
               <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5.5 5.5L20 6.5"></path></svg><span>Telegram：状态、诊断、近期日志与受控运维；破坏性操作和插件写入需确认</span></li>
             </ul>
@@ -350,7 +350,7 @@
                 console.5gpn.example.com
               </span>
             </div>
-            <img src="assets/console-dashboard.png" alt="5GPN 0.0.14 Web 控制台仪表盘，侧栏包含插件模块与插件市场" width="1440" height="900" loading="lazy" decoding="async">
+            <img src="assets/console-dashboard.png" alt="5GPN Web 控制台仪表盘，侧栏包含插件模块与插件市场" width="1440" height="900" loading="lazy" decoding="async">
           </div>
         </div>
       </section>
@@ -358,54 +358,61 @@
       <section class="section" id="extensions" aria-labelledby="extensions-title">
         <div class="extension-layout">
           <div class="extension-copy">
-            <p class="eyebrow">原生插件 · 明确授权</p>
-            <h2 id="extensions-title">市场用于发现，<br>启用始于审查</h2>
-            <p>插件可按精确域名或受限子域通配符和请求阶段改写 HTTP / HTTPS 流量，但不能绕过边界。从 URL 或市场安装时，网关会重新抓取并核验 manifest 与脚本；本地导入也经过同一严格解析与快照流程，且默认禁用。</p>
+            <p class="eyebrow">插件市场 · 发现不等于信任</p>
+            <h2 id="extensions-title">市场只负责发现，<br>每次启用都要审查</h2>
+            <p>5GPN 不预置任何市场。添加或刷新 <code class="code-chip">5gpn.io/marketplace/v1</code> 来源只缓存受限的发现元数据，不会安装、更新或启用插件。选择条目后，网关会重新抓取 manifest 与脚本，核验身份、摘要、大小与路由规则数量，再保存默认禁用的不可变快照。</p>
             <ul class="extension-capabilities">
-              <li><strong>请求与响应变换</strong><span>按 host、path、method、status 与 phase 精确匹配，只处理插件声明的流量。</span></li>
-              <li><strong>类型化设置</strong><span>支持 text、select、boolean、number 与 location；未填完必需项不能启用。</span></li>
-              <li><strong>最小网络权限</strong><span>仅开放已声明并确认的精确 origin；无文件系统、进程、原始 socket 或环境级 fetch。</span></li>
+              <li><strong>协议内精确变换</strong><span>按 host、path、method、status 与 phase 匹配 HTTP/1.1、HTTP/2 与 HTTP/3；类型化必填设置未完成时不能启用。</span></li>
+              <li><strong>解析器与执行顺序</strong><span>每个插件默认使用 Trust，运营者可切换 China；该选择是快照外的运营者状态并在更新时保留。重叠接管范围按执行顺序首条命中，DNS 不选择 mihomo 出口。</span></li>
+              <li><strong>经审查的路由</strong><span>插件可声明独立于 captureHosts 的有界全局网关 REJECT / DIRECT 规则，不能命名代理组；DIRECT 可绕过常规出口与 sidecar 接管，但规则只作用于已进入网关的流量。启用时逐条展示规范化规则，且仅在插件与 MITM 同时开启时生效。</span></li>
+              <li><strong>最小权限沙箱</strong><span>获准的精确 origin 可接收脚本可见的解密请求、响应、设置或存储数据；跨 origin 改写还会转发完整方法、解码后的请求体和端到端请求头，可能含 Cookie / Authorization。运行时仍无文件系统、进程、原始 socket 或环境级 fetch。</span></li>
             </ul>
-            <p class="extension-catalog">第一方扩展示例覆盖广告平台端点与 HTTPDNS 拦截、Apple WLOC 定位、Reddit / Spotify / YouTube 响应净化，以及 TestFlight storefront 改写。</p>
             <div class="extension-links">
               <a href="https://github.com/moooyo/5gpn-extensions" target="_blank" rel="noopener noreferrer">浏览第一方插件 <span aria-hidden="true">↗</span></a>
+              <a href="https://moooyo.github.io/5gpn-extensions/marketplace/v1/index.json" target="_blank" rel="noopener noreferrer">查看官方市场索引 <span aria-hidden="true">↗</span></a>
               <a href="https://github.com/moooyo/5gpn/blob/main/docs/native-extensions.md" target="_blank" rel="noopener noreferrer">阅读原生插件规范 <span aria-hidden="true">↗</span></a>
             </div>
           </div>
 
           <aside class="extension-receipt" aria-label="插件从发现到启用的安全流程">
             <div class="receipt-header">
-              <span class="receipt-kicker">5gpn.io/v1 · immutable snapshot</span>
+              <span class="receipt-kicker">5gpn.io/marketplace/v1 → 5gpn.io/v1</span>
               <span class="receipt-state"><span aria-hidden="true"></span>默认禁用</span>
             </div>
             <div class="receipt-digest">
               <div>
-                <span>snapshot digest</span>
-                <code>SHA-256 · canonical snapshot</code>
+                <span>published evidence</span>
+                <code>manifest + scripts · digest + size</code>
               </div>
-              <strong>本机核验</strong>
+              <strong>重新抓取</strong>
             </div>
+            <!-- [html-validate-disable-next prefer-native-element, no-redundant-role -- Safari/VoiceOver needs an explicit list role when visual markers are removed.] -->
             <ol class="extension-gates" role="list">
               <li>
                 <span class="gate-number" aria-hidden="true">01</span>
-                <div><strong>发现</strong><p>显式添加官方或自管市场 URL；浏览与刷新不会安装、更新或启用任何插件。</p></div>
-                <span class="gate-state">不改插件</span>
+                <div><strong>连接市场</strong><p>显式添加官方或自管 HTTPS 索引；有界抓取并原子缓存规范化元数据，浏览与刷新都不改插件。</p></div>
+                <span class="gate-state">仅发现</span>
               </li>
               <li>
                 <span class="gate-number" aria-hidden="true">02</span>
-                <div><strong>审查</strong><p>逐项核对接管域名、动作、脚本摘要、设置、网络 origin、存储与出口绑定。</p></div>
-                <span class="gate-state">确认</span>
+                <div><strong>安装快照</strong><p>重新抓取并严格解析 manifest 与脚本，核验摘要、大小和路由计数，落盘后仍保持禁用。</p></div>
+                <span class="gate-state">不发布</span>
               </li>
               <li>
                 <span class="gate-number" aria-hidden="true">03</span>
-                <div><strong>启用</strong><p>单独确认插件与 MITM 总开关；涉及 HTTPS 时，设备还需显式信任 CA。发布失败会恢复旧状态。</p></div>
-                <span class="gate-state gate-state-ready">显式</span>
+                <div><strong>配置边界</strong><p>核对接管域名、动作、设置、网络 origin、存储与路由；再确认解析器、运营者出口和当前执行位置，调整顺序需另行确认。</p></div>
+                <span class="gate-state">逐项审查</span>
+              </li>
+              <li>
+                <span class="gate-number" aria-hidden="true">04</span>
+                <div><strong>启用发布</strong><p>一次确认完整快照与逐条 REJECT / DIRECT 规则；插件和 MITM 同时开启后，才原子发布证书、DNS、mihomo 与 sidecar 状态，失败保留旧状态。</p></div>
+                <span class="gate-state gate-state-ready">显式授权</span>
               </li>
             </ol>
             <div class="receipt-footer">
+              <span>marketplace ≠ trust</span>
               <span>fresh VM per action</span>
-              <span>script error → fail closed</span>
-              <span>all upstream via mihomo</span>
+              <span>extension + MITM to publish</span>
             </div>
           </aside>
         </div>
@@ -461,7 +468,7 @@
           <a href="#features">特性</a>
           <a href="#setup">接入</a>
           <a href="#console">控制台</a>
-          <a href="#extensions">插件</a>
+          <a href="#extensions">插件与市场</a>
         </nav>
       </div>
       <div>

@@ -1359,13 +1359,6 @@ main {
   line-height: 1.55;
 }
 
-.extension-copy .extension-catalog {
-  margin-top: 22px;
-  color: var(--muted);
-  font-size: 13.5px;
-  line-height: 1.6;
-}
-
 .extension-links {
   margin-top: 22px;
   display: flex;
@@ -1398,14 +1391,18 @@ main {
 }
 
 .receipt-kicker {
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: #a1a1a6;
   font-family: var(--font-mono);
   font-size: 10.5px;
+  line-height: 1.4;
   letter-spacing: .045em;
   text-transform: uppercase;
 }
 
 .receipt-state {
+  flex: none;
   padding: 5px 9px;
   display: inline-flex;
   align-items: center;
